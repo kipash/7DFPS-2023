@@ -1,0 +1,16 @@
+{
+  "name": "logic",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {},
+  "peerDependencies": {
+    "@needle-tools/engine": "^3.27.2-beta",
+    "three": "npm:@needle-tools/three@^0.154.3",
+    "nipplejs": "^0.10.1"
+  },
+  "devDependencies": {
+    "@needle-tools/engine": "^3.27.2-beta",
+    "three": "npm:@needle-tools/three@^0.154.3",
+    "@types/three": "0.154.0"
+  }
+}
