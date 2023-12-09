@@ -7,10 +7,14 @@ namespace Needle.Typescript.GeneratedComponents
 {
 	public partial class GameManager : UnityEngine.MonoBehaviour
 	{
-		public UnityEngine.Transform @asset;
+		public UnityEngine.Transform @playerAsset;
+		public UnityEngine.Transform @enemyAsset;
 		public void awake(){}
 		public void OnEnable(){}
 		public void OnDisable(){}
+		public void spawnPlayer(){}
+		public void spawnEnemy(){}
+		public void spawnAsset(UnityEngine.Transform @asset){}
 	}
 }
 

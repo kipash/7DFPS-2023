@@ -8,14 +8,13 @@ export class Pig extends StandardCharacter {
     getHitSFX?: AudioSource;
 
     die(): void {
-        if(this.isDead) return;
+        if(this._isDead) return;
 
         super.die();
 
         if(this.isLocalPlayer) {
-            console.log("You died!");
             GameObject.destroy(this.camera);
-            GameObject.destroySynced(this.gameObject, this.context, true);
+            GameObject.destroySynced(this.gameObject);
         }
     }
 

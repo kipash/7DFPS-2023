@@ -55,7 +55,7 @@ export abstract class Player extends Behaviour {
 
         if(this.isLocalPlayer) {
             this._hp = this.maxHealth;
-            this.isDead = false;
+            this._isDead = false;
         }
     }
 
@@ -135,7 +135,8 @@ export abstract class Player extends Behaviour {
     protected _hp = 0 ;
     get hp() { return this._hp; }
 
-    protected isDead: boolean = false;
+    protected _isDead: boolean = false;
+    get isDead(): boolean { return this._isDead; }
 
     
 
@@ -157,13 +158,11 @@ export abstract class Player extends Behaviour {
         }
     }
 
-    protected onRecieveDamage(dmg: number) {
-
-    }
+    protected onRecieveDamage(dmg: number) { }
 
     die() {
-        if(this.isDead) return;
-        this.isDead = true; 
+        if(this._isDead) return;
+        this._isDead = true; 
 
         this.onDie?.invoke();
     }

@@ -34,7 +34,6 @@ export class Gun extends Behaviour {
     fireVisually(origin: Vector3, impactPos: Vector3 | null, impactNorm: Vector3 | null) {
         this.gunshotAudioSource?.stop();
         this.gunshotAudioSource?.play();
-        console.log("gun fire!", this.gunshotAudioSource);
 
         if (impactPos && impactNorm) {
             /* console.log("Hit!"); */

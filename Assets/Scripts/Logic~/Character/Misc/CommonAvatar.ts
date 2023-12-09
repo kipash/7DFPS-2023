@@ -40,7 +40,7 @@ export class CommonAvatar extends PlayerModule {
 
         // tint the avatar deterministically based on the owner's ID
         if(character.isNetworking) {
-            const netID = character.playerState?.owner!;
+            const netID = this.gameObject.guid!;//character.playerState?.owner!;
             this.tintObjects(netID);
         }
     }
