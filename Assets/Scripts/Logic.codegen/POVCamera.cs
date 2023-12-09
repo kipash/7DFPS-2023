@@ -24,6 +24,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public bool @enableLineOfSight = true;
 		public float @lineOfSightOffset = 0.5f;
 		public void initialize(Needle.Typescript.GeneratedComponents.Player @character){}
+		public void onDestroy(){}
 		public void onDynamicallyConstructed(){}
 		public void moduleOnBeforeRender(){}
 		public void handleZoom(float @scrollDelta){}

@@ -6,7 +6,7 @@ import { CharacterPhysics_Scheme } from "../Physics/CharacterPhysics.js";
 import { CommonCharacterInput_Scheme } from "../Input/DesktopCharacterInput.js";
 
 import { ViewModeFlags } from "../Camera/ViewMode.js";
-import { Gizmos, Mathf, getParam, serializable } from "@needle-tools/engine";
+import { GameObject, Gizmos, Mathf, getParam, serializable } from "@needle-tools/engine";
 
 const debug = getParam("debugcharacter");
 
@@ -84,6 +84,11 @@ export class POVCamera extends PlayerCamera {
             this.switchPerson(ViewModeFlags.ThirdPerson);
         
         this.restoreDefault();
+    }
+
+    onDestroy(): void {
+        if(this.cameraObject) 
+            GameObject.destroy(this.cameraObject);
     }
 
     onDynamicallyConstructed(): void {

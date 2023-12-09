@@ -36,8 +36,8 @@ export class PlayerCamera extends PlayerModule {
 
     private onRoleChanged = (isLocalPlayer: boolean) => {
         // hide camera when not a local player
-        if (this.cameraObject) {
-            this.cameraObject.visible = isLocalPlayer;
+        if (this.camera) {
+            this.camera.enabled = isLocalPlayer;
         }
     }
 

@@ -2,11 +2,13 @@
   "name": "logic",
   "version": "1.0.0",
   "main": "index.ts",
-  "dependencies": {},
+  "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.9.0",
+    "nipplejs": "^0.10.1"
+  },
   "peerDependencies": {
     "@needle-tools/engine": "^3.27.2-beta",
-    "three": "npm:@needle-tools/three@^0.154.3",
-    "nipplejs": "^0.10.1"
+    "three": "npm:@needle-tools/three@^0.154.3"
   },
   "devDependencies": {
     "@needle-tools/engine": "^3.27.2-beta",

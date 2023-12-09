@@ -19,6 +19,9 @@ import { JumpPad } from "../Character/Physics/JumpPad.js";
 import { Lift } from "../Character/Physics/Lift.js";
 import { GalleryPhysics_Scheme } from "../Character/Physics/TeleportNavigation.js";
 import { TeleportNavigation } from "../Character/Physics/TeleportNavigation.js";
+import { GameManager } from "../Jam/GameManager.js";
+import { Gun } from "../Jam/Gun.js";
+import { Pig } from "../Jam/Pig.js";
 
 // Register types
 TypeStore.add("GalleryCharacter", GalleryCharacter);
@@ -39,3 +42,6 @@ TypeStore.add("JumpPad", JumpPad);
 TypeStore.add("Lift", Lift);
 TypeStore.add("GalleryPhysics_Scheme", GalleryPhysics_Scheme);
 TypeStore.add("TeleportNavigation", TeleportNavigation);
+TypeStore.add("GameManager", GameManager);
+TypeStore.add("Gun", Gun);
+TypeStore.add("Pig", Pig);

@@ -1,4 +1,4 @@
-import { Behaviour, ConstructorConcrete, EventList, PlayerState } from "@needle-tools/engine";
+import { Behaviour, CapsuleCollider, ConstructorConcrete, EventList, GameObject, Mathf, PlayerState, getComponent, serializable, showBalloonMessage, syncField } from "@needle-tools/engine";
 import { PlayerModule, PlayerModuleRole } from "./PlayerModule.js";
 import { CharacterState } from "./PlayerState.js";
 
@@ -53,9 +53,10 @@ export abstract class Player extends Behaviour {
 
         this.roleChanged(this.isLocalPlayer);
 
-        // Force character objects to ignore raycast
-        this.gameObject.layers.set(2);
-        this.gameObject.traverse(x => x.layers.set(2));
+        if(this.isLocalPlayer) {
+            this._hp = this.maxHealth;
+            this.isDead = false;
+        }
     }
 
     protected roleChanged(isLocalPlayer: boolean) {
@@ -121,5 +122,49 @@ export abstract class Player extends Behaviour {
     }
     onBeforeRender(): void {
         this._modules.forEach(module => { if (this.allegableForUpdate(module)) { module.moduleOnBeforeRender(); } });
+    }
+
+    // ------------ JAM -------------
+
+    @serializable()
+    maxHealth: number = 100;
+
+    onDie: EventList = new EventList();
+
+    @syncField(Player.prototype.onHPChanged)
+    protected _hp = 0 ;
+    get hp() { return this._hp; }
+
+    protected isDead: boolean = false;
+
+    
+
+    dealDamage(dmg: number) {
+        this._hp = Mathf.clamp(this.hp - dmg, 0, 99999999);
+    }
+
+    protected onHPChanged(newValue: number, previousValue: number) {
+        console.log(`${this.context.connection.usersInRoom().indexOf(this.playerState?.owner!)} - HP: ${newValue}`);
+
+        const diff = newValue - previousValue;
+        console.log("diff", diff);
+        if(diff < 0) {
+            this.onRecieveDamage(diff);
+        }
+
+        if (newValue <= 0) {
+            this.die();
+        }
+    }
+
+    protected onRecieveDamage(dmg: number) {
+
+    }
+
+    die() {
+        if(this.isDead) return;
+        this.isDead = true; 
+
+        this.onDie?.invoke();
     }
 }
