@@ -145,10 +145,7 @@ export abstract class Player extends Behaviour {
     }
 
     protected onHPChanged(newValue: number, previousValue: number) {
-        console.log(`${this.context.connection.usersInRoom().indexOf(this.playerState?.owner!)} - HP: ${newValue}`);
-
         const diff = newValue - previousValue;
-        console.log("diff", diff);
         if(diff < 0) {
             this.onRecieveDamage(diff);
         }

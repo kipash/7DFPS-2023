@@ -24,6 +24,10 @@ export class GameManager extends Behaviour {
         this.context.connection.joinRoom(isDevEnvironment() ? "kippy_002" : "default");
     }
 
+    start(): void {
+        this.context.targetFrameRate = undefined; //unlock framerate
+    }
+
     onEnable(): void {
         this.context.connection.beginListen(RoomEvents.RoomStateSent, this.onJoinedRoom);
         this.context.connection.beginListen(RoomEvents.UserLeftRoom, this.onOtherUserLeft);

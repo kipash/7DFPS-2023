@@ -1,10 +1,11 @@
-import { GameObject, SyncedTransform, findObjectsOfType, serializable } from "@needle-tools/engine";
+import { GameObject, Gizmos, Mathf, SyncedTransform, findObjectsOfType, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { CharacterPhysics } from "../Character/Physics/CharacterPhysics";
 import { CommonAvatar } from "../Character/Misc/CommonAvatar";
 import { CommonCharacterAnimations } from "../Character/Misc/CommonCharacterAnimations";
 import { ViewModeFlags } from "../Character/Camera/ViewMode";
 import { Pig } from "./Pig";
+import { NavMesh } from "./NavMesh";
 
 export class Enemy extends Player {
     @serializable()
@@ -79,6 +80,19 @@ export class Enemy extends Player {
             const target = this.target.worldPosition;
             target.y = this.gameObject.worldPosition.y;
             this.gameObject.lookAt(target);
+
+            const path = NavMesh.FindPath(this.worldPosition, this.target.worldPosition);
+            if(path) {
+                path.unshift(this.worldPosition);
+                /* if(path.length == 2) {
+                    Gizmos.DrawLine(path[0], path[1], 0xff0000, 0, false);
+                } */
+                for (let i = 0; i < path.length - 1; i++) {
+                    const v1 = path[i];
+                    const v2 = path[i + 1];
+                    Gizmos.DrawLine(v1, v2, 0xff0000, 0.1, false);
+                }
+            }
         }
     }
 

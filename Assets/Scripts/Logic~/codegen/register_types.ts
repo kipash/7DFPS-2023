@@ -22,6 +22,7 @@ import { TeleportNavigation } from "../Character/Physics/TeleportNavigation.js";
 import { Enemy } from "../Jam/Enemy.js";
 import { GameManager } from "../Jam/GameManager.js";
 import { Gun } from "../Jam/Gun.js";
+import { NavMesh } from "../Jam/NavMesh.js";
 import { Pig } from "../Jam/Pig.js";
 
 // Register types
@@ -46,4 +47,5 @@ TypeStore.add("TeleportNavigation", TeleportNavigation);
 TypeStore.add("Enemy", Enemy);
 TypeStore.add("GameManager", GameManager);
 TypeStore.add("Gun", Gun);
+TypeStore.add("NavMesh", NavMesh);
 TypeStore.add("Pig", Pig);
