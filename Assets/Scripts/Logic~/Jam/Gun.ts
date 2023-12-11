@@ -1,7 +1,8 @@
-import { AudioSource, Behaviour, GameObject, Gizmos, ICollider, IGameObject, LogType, Vec2, Vec3, getTempVector, getWorldDirection, getWorldPosition, serializable, showBalloonMessage } from "@needle-tools/engine";
-import { Vector3, Ray, Object3D } from "three";
+import { AudioSource, Behaviour, Context, GameObject, Gizmos, ICollider, IGameObject, LogType, Vec2, Vec3, getTempVector, getWorldDirection, getWorldPosition, randomNumber, serializable, showBalloonMessage } from "@needle-tools/engine";
+import { Vector3, Ray, Object3D, Quaternion, Vector2, MathUtils } from "three";
 import { Player } from "../Character/Framework/Player";
 import RAPIER from "@dimforge/rapier3d-compat";
+import { degToRad, radToDeg } from "three/src/math/MathUtils";
 
 export class Gun extends Behaviour {
 
@@ -14,6 +15,11 @@ export class Gun extends Behaviour {
     @serializable(AudioSource)
     gunshotAudioSource?: AudioSource;
 
+    @serializable()
+    fireRate: number = 0;
+
+    @serializable()
+    accuracyNoise: number = 1;
 
     private ourPlayer?: Player;
     awake() {
@@ -44,9 +50,22 @@ export class Gun extends Behaviour {
     }
 
     firePhysicially(origin: Vector3, fwd: Vector3): { object: IGameObject | null, impactPos: Vector3 | null, impactNorm: Vector3 | null } {
-        const physics = this.context.physics.engine;
-        const result = this.raycastAndGetNormal(origin, fwd, this.maxDistance);
-        //Gizmos.DrawDirection(origin, fwd, 0xff0000, 5, false, this.maxDistance);
+        const noise = degToRad(this.accuracyNoise / 2);
+        const noiseVec = new Vector2(MathUtils.randFloat(-noise, noise), MathUtils.randFloat(-noise, noise));
+        noiseVec.clampLength(0, 1);
+        
+        const q1 = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), noiseVec.x);
+        const q2 = new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), noiseVec.y);
+        fwd.applyQuaternion(q2.multiply(q1));
+
+        const result = Gun.raycastAndGetNormal(origin, fwd, this.maxDistance, true, (comp) => {
+            const player = comp.gameObject.getComponentInParent(Player);
+            if(this.ourPlayer && player === this.ourPlayer) 
+                return false;
+            else
+                return true;
+        });
+        /* Gizmos.DrawDirection(origin, fwd, 0xff0000, 5, false, this.maxDistance); */
 
         if (result) {
             return { object: result.collider.gameObject, impactPos: result.point, impactNorm: result.normal! };
@@ -56,7 +75,13 @@ export class Gun extends Behaviour {
         }
     }
 
+    private lastShotTime: number = -999;
     fire() {
+        const time = this.context.time.time;
+        if (time < this.lastShotTime + this.fireRate) return;
+
+        this.lastShotTime = time;
+
         const origin = getWorldPosition(this.gameObject, getTempVector());
 
         // WTF i can't use this.forward and why it is 0,0,0 ?!?!?!
@@ -74,10 +99,9 @@ export class Gun extends Behaviour {
     }
 
     // Got to solve hitting myself
-    raycastAndGetNormal(origin: Vector3, direction: Vector3, maxDistance?: number, solid?: boolean)
+    static raycastAndGetNormal(origin: Vector3, direction: Vector3, maxDistance?: number, solid?: boolean, validateFunc?: (IComponent) => boolean)
         : null | { point: Vector3, normal: Vector3, collider: ICollider } {
-
-        const engine = this.context.physics.engine!;
+        const engine = Context.Current.physics.engine!;
         const world = engine.world as RAPIER.World;
 
         if (maxDistance === undefined) maxDistance = Infinity;
@@ -87,10 +111,9 @@ export class Gun extends Behaviour {
         const ray = new RAPIER.Ray(new RAPIER.Vector3(origin.x, origin.y, origin.z), new RAPIER.Vector3(direction.x, direction.y, direction.z));
 
         const hit = world.castRayAndGetNormal(ray, maxDistance, solid, undefined, undefined, undefined, undefined, (c) => {
-            const player = engine.getComponent(c)?.gameObject.getComponentInParent(Player);
-            if(this.ourPlayer && player === this.ourPlayer) return false;
-
-            return true;
+            const engine = Context.Current.physics.engine!;
+            const comp = engine.getComponent(c);
+            return comp ? validateFunc?.(comp) ?? false : false;
         });
         if (hit) {
             const point = ray.pointAt(hit.toi);

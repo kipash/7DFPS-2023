@@ -10,7 +10,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.Transform @playerAsset;
 		public UnityEngine.Transform @enemyAsset;
 		public void awake(){}
-		public void update(){}
+		public void start(){}
 		public void OnEnable(){}
 		public void OnDisable(){}
 		public void spawnPlayer(){}

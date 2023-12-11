@@ -2,6 +2,7 @@ import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject,
 import { Player } from "../Character/Framework/Player";
 import { Pig } from "./Pig";
 import { Enemy } from "./Enemy";
+import { Vector3 } from "three";
 
 export class GameManager extends Behaviour {
     @serializable(AssetReference)
@@ -14,14 +15,20 @@ export class GameManager extends Behaviour {
     @serializable(EventList)
     onPlayerSpawned?: EventList;
 
-    public static get isMaster(): boolean {
+    private static _isMaster: boolean = false;
+    public static get isMaster(): boolean { return this._isMaster; }
+
+    private static calculateIsMaster(): boolean {
         const net = Context.Current.connection;
         return net.isInRoom && net.usersInRoom().indexOf(net.connectionId!) === 0;
     }
+    
+    private _isReady: boolean = false;
+    get isReady(): boolean { return this._isReady }
 
     awake(): void {
         this.watchTabVisible();
-        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_002" : "default");
+        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_004" : "default");
     }
 
     start(): void {
@@ -39,13 +46,12 @@ export class GameManager extends Behaviour {
 
     private onJoinedRoom = (_model) => {
         this.spawnPlayer();
-
-        this.autoDetectMaster();
+        this._isReady = true;
+        GameManager._isMaster = GameManager.calculateIsMaster();
     }
 
     private onOtherUserLeft = (_model) => {
-        this.autoDetectMaster();
-
+        GameManager._isMaster = GameManager.calculateIsMaster();
         /* const net = this.context.connection;
         const model = _model.data as unknown as UserJoinedOrLeftRoomModel;
         const index = net.usersInRoom().indexOf(model.userId);
@@ -53,23 +59,6 @@ export class GameManager extends Behaviour {
             console.log("MASTER DISCONNECTED");
             net.leaveRoom();
         } */
-    }
-
-    private isActingMaster = false
-    private autoDetectMaster() {
-        if(this.isActingMaster) return;
-
-        // TEMP
-        if(GameManager.isMaster) {
-            this.isActingMaster = true;
-            var currentEnemey: Enemy | null = null; 
-            setInterval(async () => { 
-                if(currentEnemey && !currentEnemey.isDead) return;
-
-                const enemy = await this.spawnEnemy();
-                currentEnemey = enemy;
-            }, 1000);
-        }
     }
 
     async spawnPlayer(): Promise<Player | null> {
@@ -97,8 +86,10 @@ export class GameManager extends Behaviour {
     }
 
     // TODO: implement PR to remove timeout duplication
+    private defaultPos = new Vector3(0, 0, 0);
     async spawnAsset(asset: AssetReference) : Promise<IGameObject> {
-        const instance = await asset.instantiateSynced({ parent: this.gameObject }, true) as GameObject;
+        const instance = await asset.instantiateSynced({ parent: this.gameObject, position: this.defaultPos}, true) as GameObject;
+        instance.visible = true;
         if (instance) {
             const state = GameObject.getComponent(instance, PlayerState)!;
             state.owner = this.context.connection.connectionId!;

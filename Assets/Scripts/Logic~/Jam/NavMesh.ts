@@ -9,6 +9,7 @@ export class NavMesh extends Behaviour {
     static FindPath(from: Vector3, to: Vector3): Vector3[] {
         // Find path from A to B.
         const groupID = NavMesh.Pathfinding.getGroup(NavMesh.ZONE, from);
+        if(groupID === undefined) return [];
         const path = NavMesh.Pathfinding.findPath(from, to, NavMesh.ZONE, groupID);
 
         return path;

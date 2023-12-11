@@ -1590,6 +1590,8 @@ MonoBehaviour:
   maxDistance: 150
   damage: 34
   gunshotAudioSource: {fileID: 4938033112283138440}
+  fireRate: 0
+  accuracyNoise: 5
 --- !u!1 &4983300681560831327
 GameObject:
   m_ObjectHideFlags: 0

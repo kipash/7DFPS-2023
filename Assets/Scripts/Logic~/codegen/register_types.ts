@@ -24,6 +24,7 @@ import { GameManager } from "../Jam/GameManager.js";
 import { Gun } from "../Jam/Gun.js";
 import { NavMesh } from "../Jam/NavMesh.js";
 import { Pig } from "../Jam/Pig.js";
+import { WaveManager } from "../Jam/WaveManager.js";
 
 // Register types
 TypeStore.add("GalleryCharacter", GalleryCharacter);
@@ -49,3 +50,4 @@ TypeStore.add("GameManager", GameManager);
 TypeStore.add("Gun", Gun);
 TypeStore.add("NavMesh", NavMesh);
 TypeStore.add("Pig", Pig);
+TypeStore.add("WaveManager", WaveManager);
