@@ -49,7 +49,7 @@ export class WaveManager extends Behaviour {
 
     private unitsAlive: number = 0;
     update() {
-        if(!this.gameManager.isReady || !GameManager.isMaster) return;
+        if(!this.gameManager.gameHasStarted || !GameManager.isMaster) return;
 
         this.unitsAlive = this.currentEnemies.filter(x => x && !x.isDead).length;
 

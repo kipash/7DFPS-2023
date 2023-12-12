@@ -1,4 +1,4 @@
-import { Behaviour, addCustomExtensionPlugin, serializable } from "@needle-tools/engine";
+import { Behaviour, serializable } from "@needle-tools/engine";
 import { Mesh, Object3D, Vector3 } from "three";
 import { Pathfinding } from 'three-pathfinding';
 
@@ -6,16 +6,41 @@ export class NavMesh extends Behaviour {
 
     static Pathfinding?: Pathfinding;
 
-    static FindPath(from: Vector3, to: Vector3): Vector3[] {
-        // Find path from A to B.
-        const groupID = NavMesh.Pathfinding.getGroup(NavMesh.ZONE, from);
-        if(groupID === undefined) return [];
-        const path = NavMesh.Pathfinding.findPath(from, to, NavMesh.ZONE, groupID);
+    static IsOnNavMesh(position: Vector3): boolean {
+        return NavMesh.Pathfinding.getGroup(NavMesh.ZONE, position, false) != null;
+    }
+    static FindPath(from: Vector3, to: Vector3, fallbackFrom: Vector3 | null = null): Vector3[] {
+        let path = NavMesh.findPath(from, to);
+
+        if(!path && fallbackFrom) {
+            path = NavMesh.findPath(fallbackFrom, to);
+        }
+
+        // get nearest node
+        const groupID = NavMesh.Pathfinding.getGroup(NavMesh.ZONE, from, false);
+        if(!path && groupID) {
+            const nearNode = NavMesh.Pathfinding.getClosestNode(from, NavMesh.ZONE, groupID, true);    
+            //const farNode = NavMesh.Pathfinding.getClosestNode(from, NavMesh.ZONE, groupID, true);
+
+            if(nearNode) {
+                path = NavMesh.findPath(nearNode, to);
+            }
+        }
 
         return path;
     }
 
-    static ZONE = 'level1';
+    private static findPath(from: Vector3, to: Vector3): Vector3[] {
+        const groupID = NavMesh.Pathfinding.getGroup(NavMesh.ZONE, from);
+        const path = NavMesh.Pathfinding.findPath(from, to, NavMesh.ZONE, groupID);
+        
+        if(path) 
+            path.unshift(from);
+
+        return path;
+    }
+
+    static ZONE = 'default';
 
     @serializable(Object3D)
     navMesh?: Object3D;
@@ -27,7 +52,9 @@ export class NavMesh extends Behaviour {
         const pathfinding = NavMesh.Pathfinding ??= new Pathfinding();
 
         if (this.navMesh instanceof Mesh) {
-            pathfinding.setZoneData(NavMesh.ZONE, Pathfinding.createZone(this.navMesh.geometry));
+            const zoneData = Pathfinding.createZone(this.navMesh.geometry);
+            pathfinding.setZoneData(NavMesh.ZONE, zoneData);
+            console.log(`Adding ${NavMesh.ZONE} to pathfinding`, zoneData);
         }
     }
 }

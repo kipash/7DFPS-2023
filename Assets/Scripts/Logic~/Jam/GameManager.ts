@@ -1,8 +1,8 @@
-import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, PlayerState, RoomEvents, UserJoinedOrLeftRoomModel, isDevEnvironment, serializable } from "@needle-tools/engine";
+import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { Pig } from "./Pig";
 import { Enemy } from "./Enemy";
-import { Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
 
 export class GameManager extends Behaviour {
     @serializable(AssetReference)
@@ -15,6 +15,9 @@ export class GameManager extends Behaviour {
     @serializable(EventList)
     onPlayerSpawned?: EventList;
 
+    @serializable(Object3D)
+    masterLabel?: Object3D;
+
     private static _isMaster: boolean = false;
     public static get isMaster(): boolean { return this._isMaster; }
 
@@ -22,9 +25,6 @@ export class GameManager extends Behaviour {
         const net = Context.Current.connection;
         return net.isInRoom && net.usersInRoom().indexOf(net.connectionId!) === 0;
     }
-    
-    private _isReady: boolean = false;
-    get isReady(): boolean { return this._isReady }
 
     awake(): void {
         this.watchTabVisible();
@@ -38,20 +38,24 @@ export class GameManager extends Behaviour {
     onEnable(): void {
         this.context.connection.beginListen(RoomEvents.RoomStateSent, this.onJoinedRoom);
         this.context.connection.beginListen(RoomEvents.UserLeftRoom, this.onOtherUserLeft);
+        this.context.connection.beginListen("game-start", this.onGameStart);
     }
     onDisable(): void {
-        this.context.connection.stopListen(RoomEvents.RoomStateSent, this.onJoinedRoom)
-        this.context.connection.stopListen(RoomEvents.UserLeftRoom, this.onOtherUserLeft)
+        this.context.connection.stopListen(RoomEvents.RoomStateSent, this.onJoinedRoom);
+        this.context.connection.stopListen(RoomEvents.UserLeftRoom, this.onOtherUserLeft);
+        this.context.connection.stopListen("game-start", this.onGameStart);
     }
 
     private onJoinedRoom = (_model) => {
-        this.spawnPlayer();
-        this._isReady = true;
         GameManager._isMaster = GameManager.calculateIsMaster();
+
+        if (this.masterLabel)
+            this.masterLabel.visible = GameManager._isMaster;
     }
 
     private onOtherUserLeft = (_model) => {
-        GameManager._isMaster = GameManager.calculateIsMaster();
+        /* GameManager._isMaster = GameManager.calculateIsMaster(); */
+
         /* const net = this.context.connection;
         const model = _model.data as unknown as UserJoinedOrLeftRoomModel;
         const index = net.usersInRoom().indexOf(model.userId);
@@ -59,6 +63,24 @@ export class GameManager extends Behaviour {
             console.log("MASTER DISCONNECTED");
             net.leaveRoom();
         } */
+    }
+
+    private _gameHasStarted: boolean = false;
+    //@nonSerialized
+    get gameHasStarted(): boolean { return this._gameHasStarted;}
+
+    private startGame() {
+        this.context.connection.send("game-start");
+        this.onGameStart(null);
+    }
+    private onGameStart = async (_model) => { 
+        this._gameHasStarted = true;
+        this.startRespawnLoop();
+    }
+
+    private async startRespawnLoop() {
+        const player = await this.spawnPlayer();
+        player?.onDie.addEventListener(() => this.startRespawnLoop());
     }
 
     async spawnPlayer(): Promise<Player | null> {
@@ -85,7 +107,7 @@ export class GameManager extends Behaviour {
         return enemy;
     }
 
-    // TODO: implement PR to remove timeout duplication
+    // TODO: implement PR to remove timeout duplication / deploy selfhost
     private defaultPos = new Vector3(0, 0, 0);
     async spawnAsset(asset: AssetReference) : Promise<IGameObject> {
         const instance = await asset.instantiateSynced({ parent: this.gameObject, position: this.defaultPos}, true) as GameObject;
@@ -114,5 +136,16 @@ export class GameManager extends Behaviour {
                 }
             }
         });
+    }
+
+
+    // TEMP
+    update(): void {
+        if(this._gameHasStarted) return;
+        if(!GameManager._isMaster) return;
+
+        if(this.context.input.isKeyDown("f")) {
+            this.startGame();
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Needle.Typescript.GeneratedComponents
 	{
 		public UnityEngine.Transform @playerAsset;
 		public UnityEngine.Transform @enemyAsset;
+		public UnityEngine.GameObject @masterLabel;
 		public void awake(){}
 		public void start(){}
 		public void OnEnable(){}
@@ -16,6 +17,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public void spawnPlayer(){}
 		public void spawnEnemy(){}
 		public void spawnAsset(UnityEngine.Transform @asset){}
+		public void update(){}
 	}
 }
 
@@ -23,8 +25,8 @@ namespace Needle.Typescript.GeneratedComponents
 
 namespace Needle.Typescript.GeneratedComponents
 {
-	public partial class GameManager : UnityEngine.MonoBehaviour
-	{
+    public partial class GameManager : UnityEngine.MonoBehaviour
+    {
         public UnityEngine.Events.UnityEvent<UnityEngine.GameObject> onPlayerSpawned;
     }
 }

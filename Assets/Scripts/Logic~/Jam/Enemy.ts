@@ -1,4 +1,4 @@
-import { GameObject, Gizmos, IComponent, Mathf, SyncedTransform, findObjectsOfType, getTempVector, lookAtInverse, randomNumber, serializable } from "@needle-tools/engine";
+import { GameObject, Gizmos, IComponent, Mathf, SyncedTransform, WaitForSeconds, findObjectsOfType, getTempVector, lookAtInverse, randomNumber, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { CharacterPhysics, CharacterPhysics_MovementMode, CharacterPhysics_Scheme } from "../Character/Physics/CharacterPhysics";
 import { CommonAvatar } from "../Character/Misc/CommonAvatar";
@@ -6,7 +6,7 @@ import { CommonCharacterAnimations } from "../Character/Misc/CommonCharacterAnim
 import { ViewModeFlags } from "../Character/Camera/ViewMode";
 import { Pig } from "./Pig";
 import { NavMesh } from "./NavMesh";
-import { Object3D, Vector3 } from "three";
+import { Object3D, Vector2, Vector3 } from "three";
 import { Gun } from "./Gun";
 import { CommonCharacterInput_Scheme } from "../Character/Input/DesktopCharacterInput";
 
@@ -35,11 +35,6 @@ export class Enemy extends Player {
     protected physics!: CharacterPhysics;
     protected avatar?: CommonAvatar;
 
-    private autoDetectIntervalID = -1;
-    private autoRepathIntervalID = -1;
-    private targetVisibilityIntervalID = -1;
-    private pathfindInterval = -1;
-
     initialize(findModules?: boolean): void {
         // create required modules
         this.physics = this.ensureModule(CharacterPhysics, mod => {
@@ -62,20 +57,35 @@ export class Enemy extends Player {
             this.gameObject.getComponent(SyncedTransform)?.requestOwnership();
 
         if (this.isLocalPlayer) {
-            this.autoDetectIntervalID = setInterval(() => this.autoFindTarget(), randomNumber(800, 1200));
-            this.pathfindInterval = randomNumber(1800, 2200);
-            this.autoRepathIntervalID = setInterval(() => this.updatePath(), this.pathfindInterval);
-            this.targetVisibilityIntervalID = setInterval(() => this.checkTargetVisibility(), randomNumber(400, 600));
+            this.startCoroutine(this.updatePathLoop());
+            this.startCoroutine(this.findTargetLoop());
+            this.startCoroutine(this.targetVisibilityLoop());
         }
     }
 
-    private stopIntervals() {
-        if (this.autoDetectIntervalID != -1)
-            clearInterval(this.autoDetectIntervalID);
-        if (this.autoRepathIntervalID != -1)
-            clearInterval(this.autoRepathIntervalID);
-        if (this.targetVisibilityIntervalID != -1)
-            clearInterval(this.targetVisibilityIntervalID);
+    private pathfindInterval = -1;
+    private *updatePathLoop() {
+        this.pathfindInterval = randomNumber(0.3, 0.5);//(1.8, 2.2);
+        while (true) {
+            this.updatePath();
+            yield WaitForSeconds(this.pathfindInterval);
+        }
+    }
+
+    private *findTargetLoop() {
+        const delay = randomNumber(0.8, 1.2);
+        while (true) {
+            this.autoFindTarget();
+            yield WaitForSeconds(delay);
+        }
+    }
+
+    private *targetVisibilityLoop() {
+        const delay = randomNumber(0.4, 0.6);
+        while (true) {
+            this.checkTargetVisibility();
+            yield WaitForSeconds(delay);
+        }
     }
 
     private target?: Player;
@@ -104,7 +114,7 @@ export class Enemy extends Player {
         this.move();
 
         if(this.isTargetVisible) {
-            this.aim();
+            //this.aim();
         }
     }
 
@@ -137,21 +147,26 @@ export class Enemy extends Player {
 
     private currentPath: Vector3[] = [];
     private currentPathIndex: number = -1;
+    private lastValidNavPos: Vector3 | null = null;
     private updatePath() {
-        if (!this.target || this.target.isDead) return;
+        if (!this.target || this.target.isDead || this.isDead) return;
         
         // don't pathfind when not grounded
         const physics = this.state as CharacterPhysics_Scheme;
         if (!physics.characterIsGrounded) return;
 
-        const path = this.currentPath = NavMesh.FindPath(this.worldPosition, this.target.worldPosition);
+        let path = NavMesh.FindPath(this.worldPosition, this.target.worldPosition, this.lastValidNavPos);
+        /* if(!path && NavMesh.IsOnNavMesh(this.worldPosition) && this.currentPath[this.currentPathIndex] != undefined) {
+            path = [ this.currentPath[this.currentPathIndex] ];
+        } */
+
         if (path && path.length != 0) { // debug
+            this.currentPath = path;
             this.currentPathIndex = 0;
-            /* path.unshift(this.worldPosition); */
             /* for (let i = 0; i < path.length - 1; i++) {
                 const v1 = path[i];
                 const v2 = path[i + 1];
-                Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval / 1000, false);
+                Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
             } */
         }
         else {
@@ -159,13 +174,15 @@ export class Enemy extends Player {
         }
     }
 
-    private arriveMargin: number = 1;
-    private posLastFrame: Vector3 | null = null;
+    private arriveMargin: number = 0.4;
+    /* private posLastFrame: Vector3 | null = null; */
     private refFwd = new Vector3(0, 0, 1);
     move() {
         if(!this.currentPath) return;
         const targetPos = this.currentPath[this.currentPathIndex];
         if(targetPos === undefined) return;
+
+        this.lastValidNavPos = targetPos;
 
         const dis = this.worldPosition.distanceTo(targetPos);
         if(dis < this.arriveMargin) {
@@ -174,10 +191,10 @@ export class Enemy extends Player {
 
         const dir = getTempVector(targetPos).sub(this.worldPosition);
         
-        /* dir.applyQuaternion(this.worldQuaternion); */
         dir.y = 0;
         dir.normalize();
 
+        /* Gizmos.DrawLabel(new Vector3(0, 2, 0), `${this.currentPathIndex + 1}/${this.currentPath.length}`, 0.1, 0, 0xffffff, 0x000000, this.gameObject); */
         /* Gizmos.DrawDirection(this.worldPosition, dir, 0x00ff00, 0, false, 1); */
         
         const input = this.frameState as CommonCharacterInput_Scheme;
@@ -185,14 +202,7 @@ export class Enemy extends Player {
         input.moveDeltaY = dir.z;
         
         const physics = this.state as CharacterPhysics_Scheme;
-        physics.characterDirection = this.refFwd;//getTempVector(this.refFwd).applyQuaternion(this.worldQuaternion);
-
-        this.posLastFrame ??= this.worldPosition.clone();
-        const delta = getTempVector(this.worldPosition).sub(this.posLastFrame);
-
-        /* const lookGoal = getTempVector(targetPos);
-        lookGoal.y = this.worldPosition.y;
-        this.gameObject.lookAt(lookGoal); */
+        physics.characterDirection = this.refFwd;
     }
 
     die(): void {
@@ -201,7 +211,6 @@ export class Enemy extends Player {
         super.die();
 
         if (this.isLocalPlayer) {
-            this.stopIntervals();
             GameObject.destroySynced(this.gameObject);
         }
     }

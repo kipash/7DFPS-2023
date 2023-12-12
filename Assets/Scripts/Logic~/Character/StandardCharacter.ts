@@ -73,11 +73,15 @@ export class StandardCharacter extends Player {
 
         // locate SyncedTransform and request ownership on local player
         if (this.isLocalPlayer)
-            this.gameObject.getComponent(SyncedTransform)?.requestOwnership();
+            this.gameObject.getComponentsInChildren(SyncedTransform).forEach(x => x.requestOwnership());
 
         if (!this.isAllowedPerson(this.defaultViewMode)) this.allowedViewModes |= this.defaultViewMode;
         this.switchPerson(this.defaultViewMode);
         this.camera?.restoreDefault();
+
+        if(!this.isLocalPlayer) {
+            console.log(this.camera.camera?.gameObject, this.camera.camera?.gameObject.visible);
+        }
     }
 
     update(): void {
