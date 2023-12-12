@@ -14,10 +14,10 @@ namespace Needle.Typescript.GeneratedComponents
 		public void start(){}
 		public void OnEnable(){}
 		public void OnDisable(){}
+		public void startGame(){}
 		public void spawnPlayer(){}
 		public void spawnEnemy(){}
 		public void spawnAsset(UnityEngine.Transform @asset){}
-		public void update(){}
 	}
 }
 

@@ -28,7 +28,7 @@ export class GameManager extends Behaviour {
 
     awake(): void {
         this.watchTabVisible();
-        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_004" : "default");
+        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_006" : "default");
     }
 
     start(): void {
@@ -65,15 +65,19 @@ export class GameManager extends Behaviour {
         } */
     }
 
-    private _gameHasStarted: boolean = false;
-    //@nonSerialized
-    get gameHasStarted(): boolean { return this._gameHasStarted;}
+    startGame() {
+        if (this._gameHasStarted) return;
+        if (!GameManager._isMaster) return;
 
-    private startGame() {
         this.context.connection.send("game-start");
         this.onGameStart(null);
     }
-    private onGameStart = async (_model) => { 
+
+    private _gameHasStarted: boolean = false;
+    //@nonSerialized
+    get gameHasStarted(): boolean { return this._gameHasStarted; }
+
+    private onGameStart = async (_model) => {
         this._gameHasStarted = true;
         this.startRespawnLoop();
     }
@@ -84,22 +88,18 @@ export class GameManager extends Behaviour {
     }
 
     async spawnPlayer(): Promise<Player | null> {
-        if(!this.playerAsset) return null;
+        if (!this.playerAsset) return null;
 
         const playerObj = await this.spawnAsset(this.playerAsset);
 
         const player = playerObj.getComponent(Pig)!;
-        player.onDie.addEventListener(() => { 
-            this.onJoinedRoom(null); // respawn
-        });
-
         this.onPlayerSpawned?.invoke(playerObj);
 
         return player;
     }
-    
+
     async spawnEnemy(): Promise<Enemy | null> {
-        if(!this.enemyAsset) return null;
+        if (!this.enemyAsset) return null;
 
         const enemyObj = await this.spawnAsset(this.enemyAsset);
 
@@ -109,18 +109,18 @@ export class GameManager extends Behaviour {
 
     // TODO: implement PR to remove timeout duplication / deploy selfhost
     private defaultPos = new Vector3(0, 0, 0);
-    async spawnAsset(asset: AssetReference) : Promise<IGameObject> {
-        const instance = await asset.instantiateSynced({ parent: this.gameObject, position: this.defaultPos}, true) as GameObject;
+    async spawnAsset(asset: AssetReference): Promise<IGameObject> {
+        const instance = await asset.instantiateSynced({ parent: this.gameObject, position: this.defaultPos }, true) as GameObject;
         instance.visible = true;
         if (instance) {
             const state = GameObject.getComponent(instance, PlayerState)!;
             state.owner = this.context.connection.connectionId!;
         }
-        else{
+        else {
             console.warn("PlayerSync: failed instantiating asset!")
         }
 
-        return instance;        
+        return instance;
     }
 
     // IS THIS NEEDED? 
@@ -136,16 +136,5 @@ export class GameManager extends Behaviour {
                 }
             }
         });
-    }
-
-
-    // TEMP
-    update(): void {
-        if(this._gameHasStarted) return;
-        if(!GameManager._isMaster) return;
-
-        if(this.context.input.isKeyDown("f")) {
-            this.startGame();
-        }
     }
 }
