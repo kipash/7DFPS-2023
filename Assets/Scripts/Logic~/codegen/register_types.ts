@@ -1,6 +1,7 @@
 ﻿import { TypeStore } from "@needle-tools/engine"
 
 // Import types
+import { SpawnSpotHandlerFixed } from "../SpawnSpotHandlerFixed.js";
 import { GalleryCharacter } from "../Character/GalleryCharacter.js";
 import { StandardCharacter } from "../Character/StandardCharacter.js";
 import { PlayerCamera } from "../Character/Camera/PlayerCamera.js";
@@ -27,6 +28,7 @@ import { Pig } from "../Jam/Pig.js";
 import { WaveManager } from "../Jam/WaveManager.js";
 
 // Register types
+TypeStore.add("SpawnSpotHandlerFixed", SpawnSpotHandlerFixed);
 TypeStore.add("GalleryCharacter", GalleryCharacter);
 TypeStore.add("StandardCharacter", StandardCharacter);
 TypeStore.add("PlayerCamera", PlayerCamera);

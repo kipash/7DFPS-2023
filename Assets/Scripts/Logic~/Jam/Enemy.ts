@@ -147,7 +147,6 @@ export class Enemy extends Player {
 
     private currentPath: Vector3[] = [];
     private currentPathIndex: number = -1;
-    private lastValidNavPos: Vector3 | null = null;
     private updatePath() {
         if (!this.target || this.target.isDead || this.isDead) return;
         
@@ -155,19 +154,16 @@ export class Enemy extends Player {
         const physics = this.state as CharacterPhysics_Scheme;
         if (!physics.characterIsGrounded) return;
 
-        let path = NavMesh.FindPath(this.worldPosition, this.target.worldPosition, this.lastValidNavPos);
-        /* if(!path && NavMesh.IsOnNavMesh(this.worldPosition) && this.currentPath[this.currentPathIndex] != undefined) {
-            path = [ this.currentPath[this.currentPathIndex] ];
-        } */
+        let path = NavMesh.FindPath(this.worldPosition, this.target.worldPosition);
 
         if (path && path.length != 0) { // debug
             this.currentPath = path;
             this.currentPathIndex = 0;
-            /* for (let i = 0; i < path.length - 1; i++) {
+            for (let i = 0; i < path.length - 1; i++) {
                 const v1 = path[i];
                 const v2 = path[i + 1];
                 Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
-            } */
+            }
         }
         else {
             this.currentPathIndex = -1; // no path or update path
@@ -181,8 +177,6 @@ export class Enemy extends Player {
         if(!this.currentPath) return;
         const targetPos = this.currentPath[this.currentPathIndex];
         if(targetPos === undefined) return;
-
-        this.lastValidNavPos = targetPos;
 
         const dis = this.worldPosition.distanceTo(targetPos);
         if(dis < this.arriveMargin) {
@@ -209,6 +203,8 @@ export class Enemy extends Player {
         if (this._isDead) return;
 
         super.die();
+
+        console.log("ENEMY DIED");
 
         if (this.isLocalPlayer) {
             GameObject.destroySynced(this.gameObject);

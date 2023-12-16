@@ -16,6 +16,8 @@ export class Pig extends StandardCharacter {
             GameObject.destroy(this.camera);
             GameObject.destroySynced(this.gameObject);
         }
+
+        console.log("PLAYER DIED");
     }
 
     protected onRecieveDamage(dmg: number) {

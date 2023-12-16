@@ -35,12 +35,13 @@ export class WaveManager extends Behaviour {
 
             //enemy.gameObject.visible = false;
             
-            await delay(1000 * this.unitInterval);
+            await delay(1);
 
             // pick spawnspot
             //enemy.gameObject.visible = true;
             this.onEnemySpawned?.invoke(enemy!.gameObject);
 
+            await delay(1000 * this.unitInterval);
         }
 
         this.isSpawningAWave = false;
