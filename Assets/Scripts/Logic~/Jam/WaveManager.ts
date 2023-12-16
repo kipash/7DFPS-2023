@@ -8,7 +8,7 @@ export class WaveManager extends Behaviour {
     gameManager!: GameManager;
 
     @serializable()
-    unitInterval: number = 10;
+    unitInterval: number = 2;
 
     @serializable()
     unitCount: number = 10;
@@ -35,8 +35,7 @@ export class WaveManager extends Behaviour {
 
             //enemy.gameObject.visible = false;
             
-            // wait 1 frame
-            await delay(1);
+            await delay(1000 * this.unitInterval);
 
             // pick spawnspot
             //enemy.gameObject.visible = true;
