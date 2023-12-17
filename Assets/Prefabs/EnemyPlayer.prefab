@@ -2099,6 +2099,8 @@ MonoBehaviour:
   jumpSFX:
   - {fileID: 8300000, guid: 76f71ca4919917044b02fb4f4cc56981, type: 3}
   adjustWithScale: 1
+  footstepSource: {fileID: 0}
+  otherSource: {fileID: 0}
 --- !u!114 &6883683430735588352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2268,6 +2270,8 @@ MonoBehaviour:
   avatarObject: {fileID: 8095342522864592243}
   characterZOffset: 0.3
   headBone: {fileID: 2025273590930920347}
+  facebone: {fileID: 0}
+  renderers: []
   mainRenderer:
   - {fileID: 6076664896381355815}
   - {fileID: 3992287464942799259}

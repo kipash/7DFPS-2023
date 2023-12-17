@@ -13,6 +13,8 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.AudioClip[] @landSFX = new UnityEngine.AudioClip[]{ };
 		public UnityEngine.AudioClip[] @jumpSFX = new UnityEngine.AudioClip[]{ };
 		public bool @adjustWithScale = true;
+		public UnityEngine.AudioSource @footstepSource;
+		public UnityEngine.AudioSource @otherSource;
 		public void start(){}
 		public void moduleOnBeforeRender(){}
 	}

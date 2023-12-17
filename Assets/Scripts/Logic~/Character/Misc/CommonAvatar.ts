@@ -1,6 +1,6 @@
 import { Vector3, MeshStandardMaterial, Color, Material } from "three";
 
-import { PlayerModule, PlayerModuleType } from "../Framework/PlayerModule.js";
+import { PlayerModule, PlayerModuleRole, PlayerModuleType } from "../Framework/PlayerModule.js";
 import { ViewModeFlags } from "../Camera/ViewMode.js";
 import { Player } from "../Framework/Player.js";
 import { GameObject, Renderer, serializable } from "@needle-tools/engine";
@@ -18,8 +18,16 @@ export class CommonAvatar extends PlayerModule {
     @serializable(GameObject)
     headBone?: GameObject;
 
+    @serializable(GameObject)
+    facebone?: GameObject;
+
+    @serializable(GameObject)
+    renderers: GameObject[] = [];
+
     @serializable(Renderer)
     mainRenderer: Renderer[] = [];
+
+    get allowedRoles(): PlayerModuleRole { return PlayerModuleRole.all; }
 
     private zeroScale = new Vector3(0, 0, 0);
     private originalHeadScale?: Vector3;
@@ -43,6 +51,8 @@ export class CommonAvatar extends PlayerModule {
             const netID = this.gameObject.guid!;//character.playerState?.owner!;
             this.tintObjects(netID);
         }
+
+        this.renderers.forEach(r => r.visible = !this.player.isLocalPlayer);
     }
 
     private tintObjects(netID: string) {
@@ -73,13 +83,19 @@ export class CommonAvatar extends PlayerModule {
 
     // can't be moduleOnBeforeRender because it needs to run after the animator
     onBeforeRender(): void {
-        if(!this.player || !this.player.isInitialized || !this.player.isLocalPlayer) return; // disable the override in multiplayer
+        if(!this.player || !this.player.isInitialized) return; // disable the override in multiplayer
 
-        if (this.currentPerson != undefined && this.originalHeadScale != undefined) {
-            // apply scale every frame since animation's pose contains scale as well (?)
-            this.headBone?.scale.copy(this.currentPerson == ViewModeFlags.FirstPerson ? this.zeroScale : this.originalHeadScale)
-            const object = this.avatarObject ?? this.gameObject;
-            object.position.setZ(this.currentPerson == ViewModeFlags.FirstPerson ? -this.characterZOffset : 0);
+        if(this.player.isLocalPlayer) {
+            if (this.currentPerson != undefined && this.originalHeadScale != undefined) {
+                // apply scale every frame since animation's pose contains scale as well (?)
+                this.headBone?.scale.copy(this.currentPerson == ViewModeFlags.FirstPerson ? this.zeroScale : this.originalHeadScale)
+                const object = this.avatarObject ?? this.gameObject;
+                object.position.setZ(this.currentPerson == ViewModeFlags.FirstPerson ? -this.characterZOffset : 0);
+            }
+        }
+
+        if(this.facebone) {
+            this.facebone.position.z = -0.4098;
         }
     }
 }

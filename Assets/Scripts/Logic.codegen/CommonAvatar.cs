@@ -10,6 +10,8 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.GameObject @avatarObject;
 		public float @characterZOffset = 0.3f;
 		public UnityEngine.GameObject @headBone;
+		public UnityEngine.GameObject @facebone;
+		public UnityEngine.GameObject[] @renderers = new UnityEngine.GameObject[]{ };
 		public UnityEngine.Renderer[] @mainRenderer = new UnityEngine.Renderer[]{ };
 		public void awake(){}
 		public void setPerson(Needle.Engine.Components.Experimental.ViewModeFlags @person){}

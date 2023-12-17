@@ -30,12 +30,15 @@ export class CommonCharacterAudio extends PlayerModule {
 
     private lastFootStep: number = 0;
 
-    private footstepSource: AudioSource | null = null;
-    private otherSource: AudioSource | null = null;
+    @serializable(AudioSource)
+    footstepSource?: AudioSource;
+
+    @serializable(AudioSource)
+    otherSource?: AudioSource;
 
     start(): void {
-        this.footstepSource = this.gameObject.addNewComponent(AudioSource);
-        this.otherSource = this.gameObject.addNewComponent(AudioSource);
+        this.footstepSource ??= this.gameObject.addNewComponent(AudioSource)!;
+        this.otherSource ??= this.gameObject.addNewComponent(AudioSource)!;
     }
 
     private airtime: number = 0;
