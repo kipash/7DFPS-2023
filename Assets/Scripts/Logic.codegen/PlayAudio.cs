@@ -20,6 +20,6 @@ namespace Needle.Typescript.GeneratedComponents
 {
 	public partial class PlayAudio : UnityEngine.MonoBehaviour
 	{
-		public UnityEngine.AudioClip @clips;
+		public UnityEngine.AudioClip[] @clips;
 	}
 }

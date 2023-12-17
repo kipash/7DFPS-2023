@@ -34,7 +34,7 @@ export class GameManager extends Behaviour {
 
     awake(): void {
         this.watchTabVisible();
-        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_006" : "default");
+        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_007" : "default");
     }
 
     start(): void {

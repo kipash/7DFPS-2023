@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3018213788336044805}
   - component: {fileID: 2225341456404994935}
+  - component: {fileID: 2371421634378722864}
   m_Layer: 0
   m_Name: GetShotSFX
   m_TagString: Untagged
@@ -128,6 +129,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2371421634378722864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815842283935728608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffb0d8565b00676e1f8349e546a8b684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnAwake: 0
+  audioSource: {fileID: 2225341456404994935}
+  clips:
+  - {fileID: 8300000, guid: 5552959a736418743b973e957bbb248c, type: 3}
+  - {fileID: 8300000, guid: 9edae966f8921784cb0de7d053a7b3eb, type: 3}
+  - {fileID: 8300000, guid: aea2cc7a4f0e47441b554dfe74f7b0f0, type: 3}
+  - {fileID: 8300000, guid: eafc846db63696d4baa0e83f4bb3af41, type: 3}
+  - {fileID: 8300000, guid: 4d293cb647da9c14a9371f0051ead678, type: 3}
 --- !u!1 &3815359858840524970
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +253,7 @@ MonoBehaviour:
   cameraYOffset: 1.4
   enableSprint: 0
   enableLineOfSight: 1
-  getHitSFX: {fileID: 2225341456404994935}
+  getHitSFX: {fileID: 2371421634378722864}
 --- !u!114 &3199241210220166666
 MonoBehaviour:
   m_ObjectHideFlags: 0

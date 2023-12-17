@@ -13,6 +13,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public float @power = 0.1f;
 		public float @spin = 15f;
 		public UnityEngine.Animator @animator;
+		public Needle.Typescript.GeneratedComponents.PlayAudio @shootSFX;
 		public void update(){}
 		public void fire(){}
 	}

@@ -13,8 +13,13 @@ namespace Needle.Typescript.GeneratedComponents
 		public float @cameraYOffset = 1.6f;
 		public bool @enableSprint = true;
 		public UnityEngine.GameObject @lineOfSightRef;
+		public float @attackDistance = 1f;
+		public float @attackRate = 1f;
+		public float @attackDamage = 10f;
+		public UnityEngine.Animator @animator;
 		public void initialize(bool @findModules){}
 		public void earlyUpdate(){}
+		public void attack(){}
 		public void move(){}
 		public void die(){}
 	}

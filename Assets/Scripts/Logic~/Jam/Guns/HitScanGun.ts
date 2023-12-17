@@ -4,6 +4,7 @@ import { Player } from "../../Character/Framework/Player";
 import { degToRad } from "three/src/math/MathUtils";
 import { Gun } from "./Gun";
 import { FakeProjectile } from "./FakeProjectile";
+import { PlayAudio } from "../PlayAudio";
 
 class FakeProjectileModel {
     start: Vector3 = new Vector3();
@@ -18,8 +19,8 @@ export class HitScanGun extends Gun {
     @serializable()
     damage: number = 64;
 
-    @serializable(AudioSource)
-    gunshootAudioSource?: AudioSource;
+    @serializable(PlayAudio)
+    shootSFX?: PlayAudio;
 
     @serializable()
     fireRate: number = 0;
@@ -69,14 +70,14 @@ export class HitScanGun extends Gun {
             duration: t
         } as FakeProjectileModel;
 
-        console.log("FIRE VISUALLY");
+        this.shootSFX?.play();
+        
         this.context.connection.send(`projectile-${this.guid}`, data);
         this.spawnProjectile(data);
     }
 
     protected spawnProjectile = (model: FakeProjectileModel) => {
         if (!this.fakeProjectilePrefab) return;
-        console.log("SPAWN FAKE PROJECTILE");
 
         const obj = GameObject.instantiate(this.fakeProjectilePrefab, { parent: this.context.scene.children[0] });
         if (obj) {

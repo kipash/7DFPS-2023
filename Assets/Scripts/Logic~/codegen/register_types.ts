@@ -22,6 +22,7 @@ import { GalleryPhysics_Scheme } from "../Character/Physics/TeleportNavigation.j
 import { TeleportNavigation } from "../Character/Physics/TeleportNavigation.js";
 import { Enemy } from "../Jam/Enemy.js";
 import { GameManager } from "../Jam/GameManager.js";
+import { HousePlayer } from "../Jam/HousePlayer.js";
 import { NavMesh } from "../Jam/NavMesh.js";
 import { Pig } from "../Jam/Pig.js";
 import { PlayAudio } from "../Jam/PlayAudio.js";
@@ -57,6 +58,7 @@ TypeStore.add("GalleryPhysics_Scheme", GalleryPhysics_Scheme);
 TypeStore.add("TeleportNavigation", TeleportNavigation);
 TypeStore.add("Enemy", Enemy);
 TypeStore.add("GameManager", GameManager);
+TypeStore.add("HousePlayer", HousePlayer);
 TypeStore.add("NavMesh", NavMesh);
 TypeStore.add("Pig", Pig);
 TypeStore.add("PlayAudio", PlayAudio);

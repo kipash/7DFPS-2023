@@ -104,7 +104,7 @@ MonoBehaviour:
   cameraYOffset: 1.8
   enableSprint: 0
   enableLineOfSight: 1
-  getHitSFX: {fileID: 4071469819754183813}
+  getHitSFX: {fileID: 1858182947813884756}
 --- !u!114 &722608487634639352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +522,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1116924638004714743}
   - component: {fileID: 4071469819754183813}
+  - component: {fileID: 1858182947813884756}
   m_Layer: 0
   m_Name: GetShotSFX
   m_TagString: Untagged
@@ -640,6 +641,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1858182947813884756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3256296342907528210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffb0d8565b00676e1f8349e546a8b684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnAwake: 0
+  audioSource: {fileID: 4071469819754183813}
+  clips:
+  - {fileID: 8300000, guid: 5552959a736418743b973e957bbb248c, type: 3}
+  - {fileID: 8300000, guid: 9edae966f8921784cb0de7d053a7b3eb, type: 3}
+  - {fileID: 8300000, guid: aea2cc7a4f0e47441b554dfe74f7b0f0, type: 3}
+  - {fileID: 8300000, guid: eafc846db63696d4baa0e83f4bb3af41, type: 3}
+  - {fileID: 8300000, guid: 4d293cb647da9c14a9371f0051ead678, type: 3}
 --- !u!1 &5920553866250963072
 GameObject:
   m_ObjectHideFlags: 0

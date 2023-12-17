@@ -64,6 +64,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2276849594860644502}
   - component: {fileID: 3588573684037484453}
+  - component: {fileID: 9597610404573647}
   m_Layer: 0
   m_Name: ShootSFX
   m_TagString: Untagged
@@ -182,6 +183,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9597610404573647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4609332104208493588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffb0d8565b00676e1f8349e546a8b684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnAwake: 0
+  audioSource: {fileID: 3588573684037484453}
+  clips:
+  - {fileID: 8300000, guid: dbd630ddfc58f9a40970559a07c97730, type: 3}
+  - {fileID: 8300000, guid: e5498aa616e56f7419df003dfe63af32, type: 3}
+  - {fileID: 8300000, guid: 48e2a1efbd263e945b7e7277e7bf76f2, type: 3}
+  - {fileID: 8300000, guid: 8a3227a9fd33fa64db3fe03af7886c35, type: 3}
+  - {fileID: 8300000, guid: 8343f0ba9cb9a9c46abb7a49fd837f78, type: 3}
+  - {fileID: 8300000, guid: 7c8e0846098e6444085b4980477b04be, type: 3}
 --- !u!1 &5453506372000350450
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,10 +253,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDistance: 150
   damage: 150
-  gunshootAudioSource: {fileID: 3588573684037484453}
+  shootSFX: {fileID: 9597610404573647}
   fireRate: 1
   accuracyNoise: 1
   fakeProjectilePrefab: {fileID: 2061224604484999664}
+  fakeProjectileSpeed: 300
   animator: {fileID: 584376489848363523}
 --- !u!1001 &4016868444621228858
 PrefabInstance:

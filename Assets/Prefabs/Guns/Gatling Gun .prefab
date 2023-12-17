@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDistance: 150
   damage: 64
-  gunshootAudioSource: {fileID: 6861331267046969874}
+  shootSFX: {fileID: 3527997444533506201}
   fireRate: 0.1
   accuracyNoise: 1
   fakeProjectilePrefab: {fileID: 3626146432307655956}
@@ -67,6 +67,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8173340679425672481}
   - component: {fileID: 6861331267046969874}
+  - component: {fileID: 3527997444533506201}
   m_Layer: 0
   m_Name: ShootSFX
   m_TagString: Untagged
@@ -185,6 +186,35 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3527997444533506201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5837465077261091235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffb0d8565b00676e1f8349e546a8b684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playOnAwake: 0
+  audioSource: {fileID: 6861331267046969874}
+  clips:
+  - {fileID: 8300000, guid: 50085f5b62d6f4045b6666a811f6c1e0, type: 3}
+  - {fileID: 8300000, guid: 488936f3b472e5f4286253bf9178d079, type: 3}
+  - {fileID: 8300000, guid: 1406e398239aa2043b314dc50a1d0c34, type: 3}
+  - {fileID: 8300000, guid: 34673020f97f598409565c9cba10a4a5, type: 3}
+  - {fileID: 8300000, guid: f8feceaa358d2e04aa12a4e0116455c8, type: 3}
+  - {fileID: 8300000, guid: 2e04d3c698b4e4a438be49da857edacd, type: 3}
+  - {fileID: 8300000, guid: 5f41fb2352b4db746a3dc105d26698a8, type: 3}
+  - {fileID: 8300000, guid: 9ef15f794e0b5b74384e31287505db15, type: 3}
+  - {fileID: 8300000, guid: 433a62141e2e68e4697468057234b7b6, type: 3}
+  - {fileID: 8300000, guid: 7a1930ef36448aa4ea213cb072f0cf3e, type: 3}
+  - {fileID: 8300000, guid: db383fcae50b779418957f987b292f43, type: 3}
+  - {fileID: 8300000, guid: bb4dca8cf57248144a999777eda14ec7, type: 3}
+  - {fileID: 8300000, guid: 083f14a9f0fc37b4d92671b578dcf542, type: 3}
+  - {fileID: 8300000, guid: e74d9f4313b9775469ddabad25d34669, type: 3}
 --- !u!1 &8280574857277925233
 GameObject:
   m_ObjectHideFlags: 0

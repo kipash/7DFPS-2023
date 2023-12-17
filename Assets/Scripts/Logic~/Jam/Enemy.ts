@@ -1,4 +1,4 @@
-import { GameObject, Gizmos, IComponent, Mathf, SyncedTransform, WaitForSeconds, findObjectsOfType, getTempVector, lookAtInverse, randomNumber, serializable } from "@needle-tools/engine";
+import { Animator, GameObject, Gizmos, IComponent, Mathf, SyncedTransform, WaitForSeconds, findObjectsOfType, getTempVector, lookAtInverse, randomNumber, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { CharacterPhysics, CharacterPhysics_MovementMode, CharacterPhysics_Scheme } from "../Character/Physics/CharacterPhysics";
 import { CommonAvatar } from "../Character/Misc/CommonAvatar";
@@ -29,6 +29,19 @@ export class Enemy extends Player {
     @serializable(Object3D)
     lineOfSightRef?: Object3D;
 
+    @serializable()
+    attackDistance: number = 1;
+
+    @serializable()
+    attackRate: number = 1;
+
+    @serializable()
+    attackDamage: number = 10;
+
+    @serializable(Animator)
+    animator?: Animator;
+
+
     protected physics!: CharacterPhysics;
     protected avatar?: CommonAvatar;
 
@@ -56,7 +69,7 @@ export class Enemy extends Player {
         if (this.isLocalPlayer) {
             this.startCoroutine(this.updatePathLoop());
             this.startCoroutine(this.findTargetLoop());
-            this.startCoroutine(this.targetVisibilityLoop());
+            /* this.startCoroutine(this.targetVisibilityLoop()); */
         }
     }
 
@@ -77,13 +90,13 @@ export class Enemy extends Player {
         }
     }
 
-    private *targetVisibilityLoop() {
+    /* private *targetVisibilityLoop() {
         const delay = randomNumber(0.4, 0.6);
         while (true) {
             this.checkTargetVisibility();
             yield WaitForSeconds(delay);
         }
-    }
+    } */
 
     private target?: Player;
     private autoFindTarget() {
@@ -110,22 +123,25 @@ export class Enemy extends Player {
 
         this.move();
 
-        if(this.isTargetVisible) {
-            //this.aim();
-        }
+        this.attack();
     }
 
-    private aim() {
-        /* if(!this.gun || !this.target) return;
+    private lastAttackTime: number = Number.MIN_SAFE_INTEGER;
+    attack() {
+        if(!this.target || this.target.isDead || this.isDead) return;
 
-        const goal = getTempVector(this.target.worldPosition);
-        goal.y += 1.5;
-        this.gun.gameObject.lookAt(goal);
+        const distance = this.worldPosition.distanceTo(this.target.worldPosition);
+        if(distance > this.attackDistance) return;
 
-        this.gun.fire(); */
+        const time = this.context.time.time;
+        if(time - this.lastAttackTime < this.attackRate) return;
+
+        this.lastAttackTime = time;
+        this.target.dealDamage(this.attackDamage);
+        this.animator?.play("Peck");
     }
 
-    private isTargetVisible: boolean = false;
+    /* private isTargetVisible: boolean = false;
     private checkTargetVisibility() {
         if (!this.target || this.target.isDead) return;
         if (!this.lineOfSightRef) return;
@@ -140,7 +156,7 @@ export class Enemy extends Player {
         });
 
         this.isTargetVisible = result != null;
-    }
+    } */
 
     private currentPath: Vector3[] = [];
     private currentPathIndex: number = -1;
@@ -188,6 +204,9 @@ export class Enemy extends Player {
         /* Gizmos.DrawLabel(new Vector3(0, 2, 0), `${this.currentPathIndex + 1}/${this.currentPath.length}`, 0.1, 0, 0xffffff, 0x000000, this.gameObject); */
         /* Gizmos.DrawDirection(this.worldPosition, dir, 0x00ff00, 0, false, 1); */
         
+        // don't move while attacking
+        if (this.context.time.time - this.lastAttackTime < this.attackRate) return;
+
         const input = this.frameState as CommonCharacterInput_Scheme;
         input.moveDeltaX = -dir.x;
         input.moveDeltaY = dir.z;
@@ -200,8 +219,6 @@ export class Enemy extends Player {
         if (this._isDead) return;
 
         super.die();
-
-        console.log("ENEMY DIED");
 
         if (this.isLocalPlayer) {
             GameObject.destroySynced(this.gameObject);

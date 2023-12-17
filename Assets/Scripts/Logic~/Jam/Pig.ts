@@ -1,11 +1,12 @@
 import { AudioSource, GameObject, findObjectsOfType, serializable } from "@needle-tools/engine";
 import { StandardCharacter } from "../Character/StandardCharacter";
 import { Gun } from "./Guns/Gun";
+import { PlayAudio } from "./PlayAudio";
 
 export class Pig extends StandardCharacter {
 
-    @serializable(AudioSource)
-    getHitSFX?: AudioSource;
+    @serializable(PlayAudio)
+    getHitSFX?: PlayAudio;
 
     die(): void {
         if(this._isDead) return;
@@ -25,7 +26,6 @@ export class Pig extends StandardCharacter {
         
         if(this.getHitSFX && this.isLocalPlayer) {
             if (this.hp > 0) {
-                this.getHitSFX.stop();
                 this.getHitSFX.play();
             }
         }

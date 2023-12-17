@@ -14,6 +14,9 @@ export class SpawnSpotHandlerFixed extends Behaviour {
     @serializable()
     offsetForError: number = 1;
 
+    @serializable()
+    offsetBasedOnLocalClientIndex: boolean = false;
+
     private downVector = new Vector3(0, -1, 0);
     private upVector = new Vector3(0, 1, 0);
     private offsetVector = new Vector3();
@@ -28,7 +31,7 @@ export class SpawnSpotHandlerFixed extends Behaviour {
         let spot: Object3D | undefined;
 
         const net = this.context.connection;
-        if (net.isInRoom) {
+        if (this.offsetBasedOnLocalClientIndex && net.isInRoom) {
             this.validIndex += net.usersInRoom().indexOf(net.connectionId!) % this.spawnPoints.length;
         }
         else {

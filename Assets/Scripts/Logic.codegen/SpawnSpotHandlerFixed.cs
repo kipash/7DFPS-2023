@@ -9,6 +9,7 @@ namespace Needle.Typescript.GeneratedComponents
 	{
 		public UnityEngine.GameObject[] @spawnPoints = new UnityEngine.GameObject[]{ };
 		public float @offsetForError = 1f;
+		public bool @offsetBasedOnLocalClientIndex = false;
 		public void handlePlayerSpawn(UnityEngine.GameObject @obj){}
 	}
 }

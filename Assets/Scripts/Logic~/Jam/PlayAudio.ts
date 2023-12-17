@@ -5,6 +5,7 @@ export class PlayAudio extends Behaviour {
     playOnAwake: boolean = false;
 
     //@nonSerialized
+    @serializable(URL)
     clips: string[] = [];
 
     @serializable(AudioSource)

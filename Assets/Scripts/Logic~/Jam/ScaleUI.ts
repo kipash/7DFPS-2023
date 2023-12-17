@@ -14,7 +14,6 @@ export class ScaleUI extends Behaviour {
         const deltaY = this.context.domHeight / this.safeArea.y;
 
         const scale = Mathf.clamp(Math.min(deltaX, deltaY), 0, 1);
-        console.log(scale);
         
         //this.rectTransform?.shadowComponent?.scale.setScalar(scale);
         this.rectTransform!.scale.set(scale, scale, scale);

@@ -9,7 +9,7 @@ namespace Needle.Typescript.GeneratedComponents
 	{
 		public float @maxDistance = 150f;
 		public float @damage = 64f;
-		public UnityEngine.AudioSource @gunshootAudioSource;
+		public Needle.Typescript.GeneratedComponents.PlayAudio @shootSFX;
 		public float @fireRate = 0f;
 		public float @accuracyNoise = 1f;
 		public UnityEngine.GameObject @fakeProjectilePrefab;

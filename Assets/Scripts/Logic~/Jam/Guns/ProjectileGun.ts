@@ -2,6 +2,7 @@ import { Animator, AssetReference, GameObject, delay, getTempVector, serializabl
 import { Object3D, Quaternion } from "three";
 import { Gun } from "./Gun";
 import { Projectile } from "./Projectile";
+import { PlayAudio } from "../PlayAudio";
 
 
 export class ProjectileGun extends Gun {
@@ -23,8 +24,8 @@ export class ProjectileGun extends Gun {
     @serializable(Animator)
     animator?: Animator;
 
-    /* @serializable(AudioSource)
-    shootSFX?: AudioSource; */
+    @serializable(PlayAudio)
+    shootSFX?: PlayAudio;
     update(): void {
         if (!this.ourPlayer || !this.ourPlayer.isInitialized) return;
 
@@ -56,7 +57,6 @@ export class ProjectileGun extends Gun {
         }
 
         // sfx
-        //this.shootSFX?.stop();
-        //this.shootSFX?.play();
+        this.shootSFX?.play();
     }
 }
