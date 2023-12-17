@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 8173340679425672481}
   - {fileID: 8280574857277925232}
-  - {fileID: 6650806221700129484}
+  - {fileID: 7642980997039579001}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -52,7 +52,7 @@ MonoBehaviour:
   shootSFX: {fileID: 3527997444533506201}
   fireRate: 0.1
   accuracyNoise: 1
-  fakeProjectilePrefab: {fileID: 3626146432307655956}
+  fakeProjectilePrefab: {fileID: 292614447959197857}
   fakeProjectileSpeed: 100
   barrel: {fileID: 7075551985142852099}
   maxSpinSpeed: 10
@@ -247,7 +247,7 @@ Transform:
   m_Father: {fileID: 6932914755780195571}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1834813043360344030
+--- !u!1001 &3398998361565633131
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -256,7 +256,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3108671533531288266, guid: 5fef70d8f20dd9f40b9f16c1e4676f74, type: 3}
       propertyPath: m_Name
-      value: FakeProjectile
+      value: Carrot
       objectReference: {fileID: 0}
     - target: {fileID: 3108671533531288266, guid: 5fef70d8f20dd9f40b9f16c1e4676f74, type: 3}
       propertyPath: m_IsActive
@@ -308,15 +308,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fef70d8f20dd9f40b9f16c1e4676f74, type: 3}
---- !u!1 &3626146432307655956 stripped
+--- !u!1 &292614447959197857 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3108671533531288266, guid: 5fef70d8f20dd9f40b9f16c1e4676f74, type: 3}
-  m_PrefabInstance: {fileID: 1834813043360344030}
+  m_PrefabInstance: {fileID: 3398998361565633131}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &6650806221700129484 stripped
+--- !u!4 &7642980997039579001 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4988574108969846034, guid: 5fef70d8f20dd9f40b9f16c1e4676f74, type: 3}
-  m_PrefabInstance: {fileID: 1834813043360344030}
+  m_PrefabInstance: {fileID: 3398998361565633131}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8280574857565629620
 PrefabInstance:

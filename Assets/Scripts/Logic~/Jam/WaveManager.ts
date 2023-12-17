@@ -2,6 +2,7 @@ import { Behaviour, EventList, Mathf, Text, WaitForFrames, WaitForSeconds, delay
 import { GameManager } from "./GameManager";
 import { Enemy } from "./Enemy";
 import { Object3D } from "three";
+import { PlayAudio } from "./PlayAudio";
 
 export class WaveManager extends Behaviour {
     @serializable(GameManager)
@@ -13,6 +14,12 @@ export class WaveManager extends Behaviour {
     @serializable()
     unitCount: number = 10;
 
+    @serializable()
+    delayWaveStart: number = 2;
+
+    @serializable()
+    delayBetweenWaves: number = 10;
+
     @serializable(Text)
     waveLabel?: Text;
 
@@ -20,16 +27,36 @@ export class WaveManager extends Behaviour {
     @serializable(EventList)
     onEnemySpawned: EventList = new EventList();
 
+    @serializable(PlayAudio)
+    waveStartAudio?: PlayAudio;
+
+    @serializable(PlayAudio)
+    waveFinishedAudio?: PlayAudio;
+
+    @serializable(PlayAudio)
+    gameOver?: PlayAudio;
+
     private currentEnemies: Enemy[] = [];
+
+    awake(): void {
+        this.gameManager.onPlayerSpawned?.addEventListener(() => {
+            if(GameManager.isMaster)
+                this.spawnWave();
+        });
+    }
 
     private isSpawningAWave: boolean = false;
     async spawnWave() {
         if (this.isSpawningAWave) return;
         
-        console.log(`SPAWNING WAVE: ${this.unitCount} units`);
+        this.waveStartAudio?.play();
         this.isSpawningAWave = true;
 
-        for (let i = 0; i < this.unitCount; i++) {
+        await delay(this.delayWaveStart * 1000);
+
+        const unitsToSpawn = this.unitCount * Math.max(1, this.context.connection.usersInRoom().length);
+
+        for (let i = 0; i < unitsToSpawn; i++) {
             const enemy = await this.gameManager.spawnEnemy() as Enemy;
             this.currentEnemies.push(enemy!);
 
@@ -44,7 +71,17 @@ export class WaveManager extends Behaviour {
             await delay(1000 * this.unitInterval);
         }
 
+        while (this.currentEnemies.some(x => (x != null || x != undefined) && !x.isDead)) {
+            await delay(250);
+        }
+        
+        this.waveFinishedAudio?.play();
+
+        await delay(this.delayBetweenWaves * 1000);
+
         this.isSpawningAWave = false;
+
+        this.spawnWave();
     }
 
     private unitsAlive: number = 0;
@@ -60,13 +97,8 @@ export class WaveManager extends Behaviour {
             }
         });
         
-        if (this.unitsAlive == 0) {
-            this.currentEnemies.length = 0;
-            this.spawnWave();
-        }
-
-        if(this.waveLabel) {
+        /* if(this.waveLabel) {
             this.waveLabel.text = `${this.unitsAlive} / ${this.unitCount}`;
-        }
+        } */
     }
 }

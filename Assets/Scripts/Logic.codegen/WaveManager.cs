@@ -10,7 +10,13 @@ namespace Needle.Typescript.GeneratedComponents
 		public Needle.Typescript.GeneratedComponents.GameManager @gameManager;
 		public float @unitInterval = 2f;
 		public float @unitCount = 10f;
+		public float @delayWaveStart = 2f;
+		public float @delayBetweenWaves = 10f;
 		public UnityEngine.UI.Text @waveLabel;
+		public Needle.Typescript.GeneratedComponents.PlayAudio @waveStartAudio;
+		public Needle.Typescript.GeneratedComponents.PlayAudio @waveFinishedAudio;
+		public Needle.Typescript.GeneratedComponents.PlayAudio @gameOver;
+		public void awake(){}
 		public void spawnWave(){}
 		public void update(){}
 	}
