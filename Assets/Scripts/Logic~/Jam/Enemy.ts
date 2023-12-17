@@ -7,7 +7,7 @@ import { ViewModeFlags } from "../Character/Camera/ViewMode";
 import { Pig } from "./Pig";
 import { NavMesh } from "./NavMesh";
 import { Object3D, Vector2, Vector3 } from "three";
-import { Gun } from "./Gun";
+import { Gun } from "./Guns/Gun";
 import { CommonCharacterInput_Scheme } from "../Character/Input/DesktopCharacterInput";
 
 export class Enemy extends Player {

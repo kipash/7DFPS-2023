@@ -1,4 +1,4 @@
-import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, serializable } from "@needle-tools/engine";
+import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, Mathf, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { Pig } from "./Pig";
 import { Enemy } from "./Enemy";
@@ -6,7 +6,13 @@ import { Object3D, Vector3 } from "three";
 
 export class GameManager extends Behaviour {
     @serializable(AssetReference)
-    playerAsset?: AssetReference;
+    plinkyAsset?: AssetReference;
+
+    @serializable(AssetReference)
+    stinkyAsset?: AssetReference;
+
+    @serializable(AssetReference)
+    blinkyAsset?: AssetReference;
 
     @serializable(AssetReference)
     enemyAsset?: AssetReference;
@@ -87,11 +93,18 @@ export class GameManager extends Behaviour {
         player?.onDie.addEventListener(() => this.startRespawnLoop());
     }
 
+    private charSelect: number = 0;
+    selectCharacter(index: number) {
+        this.charSelect = index;
+    }
+
     private players: Player[] = [];
     async spawnPlayer(): Promise<Player | null> {
-        if (!this.playerAsset) return null;
+        if (!this.plinkyAsset) return null;
 
-        const playerObj = await this.spawnAsset(this.playerAsset);
+        const asset = [this.plinkyAsset, this.stinkyAsset, this.blinkyAsset][Mathf.clamp(this.charSelect, 0, 2)]!;
+        console.log(asset.uri);
+        const playerObj = await this.spawnAsset(asset);
 
         const player = playerObj.getComponent(Pig)!;
         this.players.push(player);

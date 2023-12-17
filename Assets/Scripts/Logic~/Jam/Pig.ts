@@ -1,6 +1,6 @@
 import { AudioSource, GameObject, findObjectsOfType, serializable } from "@needle-tools/engine";
 import { StandardCharacter } from "../Character/StandardCharacter";
-import { Gun } from "./Gun";
+import { Gun } from "./Guns/Gun";
 
 export class Pig extends StandardCharacter {
 

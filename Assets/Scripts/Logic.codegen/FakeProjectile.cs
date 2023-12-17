@@ -5,11 +5,9 @@
 
 namespace Needle.Typescript.GeneratedComponents
 {
-	public partial class GatlingGun : Needle.Typescript.GeneratedComponents.HitScanGun
+	public partial class FakeProjectile : UnityEngine.MonoBehaviour
 	{
-		public UnityEngine.GameObject @barrel;
-		public float @maxSpinSpeed = 10f;
-		public float @spinAcceleration = 1f;
+		public void initialize(UnityEngine.Vector3 @start, UnityEngine.Vector3 @end, float @duration){}
 		public void update(){}
 	}
 }
