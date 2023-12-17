@@ -27,11 +27,16 @@ export class SpawnSpotHandlerFixed extends Behaviour {
         // Choose a random spawn point that is not occupied
         let spot: Object3D | undefined;
 
-        // increment the index
-        if(this.validIndex + 1 >= this.spawnPoints.length)
-            this.validIndex = 0;
-        else
+        const net = this.context.connection;
+        if (net.isInRoom) {
+            this.validIndex += net.usersInRoom().indexOf(net.connectionId!) % this.spawnPoints.length;
+        }
+        else {
             this.validIndex++;
+        }
+
+        // increment the index
+        this.validIndex = Math.abs(this.validIndex % this.spawnPoints.length);
 
         for (let i = this.validIndex; i < this.spawnPoints.length; i++) {
             const element = this.spawnPoints[i];

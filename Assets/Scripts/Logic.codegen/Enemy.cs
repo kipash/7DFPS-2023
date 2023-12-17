@@ -13,7 +13,6 @@ namespace Needle.Typescript.GeneratedComponents
 		public float @cameraYOffset = 1.6f;
 		public bool @enableSprint = true;
 		public UnityEngine.GameObject @lineOfSightRef;
-		public Needle.Typescript.GeneratedComponents.Gun @gun;
 		public void initialize(bool @findModules){}
 		public void earlyUpdate(){}
 		public void move(){}

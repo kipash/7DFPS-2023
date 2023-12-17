@@ -2059,7 +2059,6 @@ MonoBehaviour:
   cameraYOffset: 1.6
   enableSprint: 1
   lineOfSightRef: {fileID: 2025273590930920347}
-  gun: {fileID: 8145326165558843204}
 --- !u!143 &1028328968054885533
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2786,14 +2785,3 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 2823171934169158070, guid: c7d04c027abe1e542bf8e5645559639f, type: 3}
   m_PrefabInstance: {fileID: 7733354668722505401}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8145326165558843204 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1898381476089827837, guid: c7d04c027abe1e542bf8e5645559639f, type: 3}
-  m_PrefabInstance: {fileID: 7733354668722505401}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef455fe584fc8de00b1ae98be063afe4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

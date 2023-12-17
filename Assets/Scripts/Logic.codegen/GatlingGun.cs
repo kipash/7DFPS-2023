@@ -5,9 +5,8 @@
 
 namespace Needle.Typescript.GeneratedComponents
 {
-	public partial class Gun : UnityEngine.MonoBehaviour
+	public partial class GatlingGun : Needle.Typescript.GeneratedComponents.HitScanGun
 	{
-		public void awake(){}
 	}
 }
 

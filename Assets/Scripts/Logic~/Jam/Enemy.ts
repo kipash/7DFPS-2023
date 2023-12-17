@@ -29,9 +29,6 @@ export class Enemy extends Player {
     @serializable(Object3D)
     lineOfSightRef?: Object3D;
 
-    @serializable(Gun)
-    gun?: Gun;
-
     protected physics!: CharacterPhysics;
     protected avatar?: CommonAvatar;
 
@@ -119,13 +116,13 @@ export class Enemy extends Player {
     }
 
     private aim() {
-        if(!this.gun || !this.target) return;
+        /* if(!this.gun || !this.target) return;
 
         const goal = getTempVector(this.target.worldPosition);
         goal.y += 1.5;
         this.gun.gameObject.lookAt(goal);
 
-        this.gun.fire();
+        this.gun.fire(); */
     }
 
     private isTargetVisible: boolean = false;
@@ -159,11 +156,11 @@ export class Enemy extends Player {
         if (path && path.length != 0) { // debug
             this.currentPath = path;
             this.currentPathIndex = 0;
-            for (let i = 0; i < path.length - 1; i++) {
+            /* for (let i = 0; i < path.length - 1; i++) {
                 const v1 = path[i];
                 const v2 = path[i + 1];
                 Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
-            }
+            } */
         }
         else {
             this.currentPathIndex = -1; // no path or update path

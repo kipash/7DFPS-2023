@@ -24,8 +24,10 @@ export class Pig extends StandardCharacter {
         super.onRecieveDamage(dmg);
         
         if(this.getHitSFX && this.isLocalPlayer) {
-            this.getHitSFX.stop();
-            this.getHitSFX.play();
+            if (this.hp > 0) {
+                this.getHitSFX.stop();
+                this.getHitSFX.play();
+            }
         }
     }
 

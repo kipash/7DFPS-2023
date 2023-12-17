@@ -25,7 +25,7 @@ export class NavMesh extends Behaviour {
                 const fixedA = NavMesh.getClosestVertex(from)!;
                 if (fixedA) {
                     a = fixedA;
-                    Gizmos.DrawLine(from, a, 0xff00ff, 0.5, false);
+                    //Gizmos.DrawLine(from, a, 0xff00ff, 0.5, false);
                 }
                 /* else
                     console.log("No A"); */
@@ -37,7 +37,7 @@ export class NavMesh extends Behaviour {
                 const fixedB = NavMesh.getClosestVertex(to) ?? to;
                 if (fixedB) {
                     b = fixedB;
-                    Gizmos.DrawLine(to, b, 0xff8800, 1, false);
+                    //Gizmos.DrawLine(to, b, 0xff8800, 1, false);
                 }
                 /* else
                     console.log("No B"); */
@@ -53,7 +53,7 @@ export class NavMesh extends Behaviour {
             }
         }
 
-        console.log("Find path. From: ", from.x.toFixed(1), from.y.toFixed(1), from.z.toFixed(1), " | To: ", to.x.toFixed(1), to.y.toFixed(1), to.z.toFixed(1), " | Result: ", path?.length);
+        //console.log("Find path. From: ", from.x.toFixed(1), from.y.toFixed(1), from.z.toFixed(1), " | To: ", to.x.toFixed(1), to.y.toFixed(1), to.z.toFixed(1), " | Result: ", path?.length);
 
         // get nearest node
 

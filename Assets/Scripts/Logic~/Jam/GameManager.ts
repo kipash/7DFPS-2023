@@ -87,15 +87,28 @@ export class GameManager extends Behaviour {
         player?.onDie.addEventListener(() => this.startRespawnLoop());
     }
 
+    private players: Player[] = [];
     async spawnPlayer(): Promise<Player | null> {
         if (!this.playerAsset) return null;
 
         const playerObj = await this.spawnAsset(this.playerAsset);
 
         const player = playerObj.getComponent(Pig)!;
+        this.players.push(player);
+        player.onDie.addEventListener(() => {
+            this.players.splice(this.players.indexOf(player), 1);
+        });
         this.onPlayerSpawned?.invoke(playerObj);
 
         return player;
+    }
+
+    update(): void {
+        this.players.forEach(x => {
+            if(!x.isDead && x.worldPosition.y < -20) {
+                x.dealDamage(9999);
+            }
+        });
     }
 
     async spawnEnemy(): Promise<Enemy | null> {
