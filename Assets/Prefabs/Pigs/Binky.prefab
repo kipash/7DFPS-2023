@@ -1005,7 +1005,7 @@ MonoBehaviour:
   - {fileID: 3039129277048039216}
   - {fileID: 1293041227625475061}
   mainRenderer: []
---- !u!114 &4691993791921121519
+--- !u!114 &5704647484384607210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1016,8 +1016,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 549c235b2c39fce4aed5c9fe14ca5bed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Needle.Typescript.GeneratedComponents.SyncedAnimator,
-    Needle.Engine-Samples.Runtime
+  m_EditorClassIdentifier: 
 --- !u!114 &6759671879668462229
 MonoBehaviour:
   m_ObjectHideFlags: 0

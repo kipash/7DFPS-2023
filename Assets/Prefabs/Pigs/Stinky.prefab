@@ -928,7 +928,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1384030189571188785
+--- !u!114 &4454415852946877768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -939,8 +939,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 549c235b2c39fce4aed5c9fe14ca5bed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Needle.Typescript.GeneratedComponents.SyncedAnimator,
-    Needle.Engine-Samples.Runtime
+  m_EditorClassIdentifier: 
 --- !u!114 &4766669949701544574
 MonoBehaviour:
   m_ObjectHideFlags: 0

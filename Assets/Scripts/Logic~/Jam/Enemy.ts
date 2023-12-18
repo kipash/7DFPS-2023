@@ -9,6 +9,7 @@ import { NavMesh } from "./NavMesh";
 import { Object3D, Vector2, Vector3 } from "three";
 import { Gun } from "./Guns/Gun";
 import { CommonCharacterInput_Scheme } from "../Character/Input/DesktopCharacterInput";
+import { HousePlayer } from "./HousePlayer";
 
 export class Enemy extends Player {
     @serializable()
@@ -43,7 +44,6 @@ export class Enemy extends Player {
 
 
     protected physics!: CharacterPhysics;
-    protected avatar?: CommonAvatar;
 
     initialize(findModules?: boolean): void {
         // create required modules
@@ -55,10 +55,6 @@ export class Enemy extends Player {
             if (!this.enableSprint)
                 mod.sprintModifier = 1;
         });
-
-        // get optional modules
-        this.avatar = this.gameObject.getComponentInChildren(CommonAvatar)!;
-        this.avatar.setPerson(ViewModeFlags.ThirdPerson);
 
         super.initialize(findModules);
 
@@ -75,7 +71,7 @@ export class Enemy extends Player {
 
     private pathfindInterval = -1;
     private *updatePathLoop() {
-        this.pathfindInterval = randomNumber(1.8, 2.2);
+        this.pathfindInterval = randomNumber(.4, .6);//1.8, 2.2);
         while (true) {
             this.updatePath();
             yield WaitForSeconds(this.pathfindInterval);
@@ -108,7 +104,7 @@ export class Enemy extends Player {
         players = players
             .filter(x => x != this && x.gameObject !== null && x.gameObject !== undefined)
             .filter(x => !x.isDead)
-            .filter(x => x instanceof Pig)
+            .filter(x => x instanceof Pig || x instanceof HousePlayer)
             .sort((a, b) => {
                 return a.gameObject.worldPosition.distanceTo(this.gameObject.worldPosition) - b.gameObject.worldPosition.distanceTo(this.gameObject.worldPosition);
             });
@@ -162,6 +158,12 @@ export class Enemy extends Player {
     private currentPathIndex: number = -1;
     private updatePath() {
         if (!this.target || this.target.isDead || this.isDead) return;
+
+        //console.log("Targetting: ", this.target.gameObject.name);
+
+        /* this.currentPath.length = 0;
+        this.currentPath = [this.target.gameObject.getWorldPosition(getTempVector()).clone()];
+        this.currentPathIndex = 0; */
         
         // don't pathfind when not grounded
         const physics = this.state as CharacterPhysics_Scheme;
@@ -172,11 +174,11 @@ export class Enemy extends Player {
         if (path && path.length != 0) { // debug
             this.currentPath = path;
             this.currentPathIndex = 0;
-            /* for (let i = 0; i < path.length - 1; i++) {
-                const v1 = path[i];
-                const v2 = path[i + 1];
-                Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
-            } */
+            //for (let i = 0; i < path.length - 1; i++) {
+            //    const v1 = path[i];
+            //    const v2 = path[i + 1];
+            //    Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
+            //}
         }
         else {
             this.currentPathIndex = -1; // no path or update path
@@ -189,18 +191,17 @@ export class Enemy extends Player {
     move() {
         if(!this.currentPath) return;
         const targetPos = this.currentPath[this.currentPathIndex];
-        if(targetPos === undefined) return;
+        if(targetPos === undefined) return
 
-        const dis = this.worldPosition.distanceTo(targetPos);
-        if(dis < this.arriveMargin /* && this.currentPath.length < this.currentPathIndex + 1 */) {
+        const distance = this.worldPosition.distanceTo(targetPos);
+        if(distance < this.arriveMargin) {
             this.currentPathIndex++;
 
-            /* // discard this update
             this.move();
-            return; */
+            return;
         }
 
-        const dir = getTempVector(targetPos).sub(this.worldPosition);
+        const dir = getTempVector(targetPos).sub(this.gameObject.worldPosition);
         
         dir.y = 0;
         dir.normalize();

@@ -976,7 +976,7 @@ MonoBehaviour:
   - {fileID: 4367094317426402112}
   - {fileID: 2680321654464882095}
   mainRenderer: []
---- !u!114 &3757867283010707823
+--- !u!114 &5796679423371837452
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -987,8 +987,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 549c235b2c39fce4aed5c9fe14ca5bed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Needle.Typescript.GeneratedComponents.SyncedAnimator,
-    Needle.Engine-Samples.Runtime
+  m_EditorClassIdentifier: 
 --- !u!1 &2680321654464882095 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8398838598135529277, guid: 75316bd8448912f4d8448c8a3046b7fd, type: 3}

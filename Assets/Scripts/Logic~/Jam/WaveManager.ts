@@ -54,7 +54,7 @@ export class WaveManager extends Behaviour {
 
         await delay(this.delayWaveStart * 1000);
 
-        const unitsToSpawn = this.unitCount * Math.max(1, this.context.connection.usersInRoom().length);
+        const unitsToSpawn = this.unitCount;// * Math.max(1, this.context.connection.usersInRoom().length);
 
         for (let i = 0; i < unitsToSpawn; i++) {
             const enemy = await this.gameManager.spawnEnemy() as Enemy;
