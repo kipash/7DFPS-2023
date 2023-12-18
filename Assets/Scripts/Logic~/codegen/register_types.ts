@@ -1,7 +1,6 @@
 ﻿import { TypeStore } from "@needle-tools/engine"
 
 // Import types
-import { SpawnSpotHandlerFixed } from "../SpawnSpotHandlerFixed.js";
 import { GalleryCharacter } from "../Character/GalleryCharacter.js";
 import { StandardCharacter } from "../Character/StandardCharacter.js";
 import { PlayerCamera } from "../Character/Camera/PlayerCamera.js";
@@ -27,6 +26,8 @@ import { NavMesh } from "../Jam/NavMesh.js";
 import { Pig } from "../Jam/Pig.js";
 import { PlayAudio } from "../Jam/PlayAudio.js";
 import { ScaleUI } from "../Jam/ScaleUI.js";
+import { SpawnSpotHandlerFixed } from "../Jam/SpawnSpotHandlerFixed.js";
+import { UIManager } from "../Jam/UIManager.js";
 import { WaveManager } from "../Jam/WaveManager.js";
 import { FakeProjectile } from "../Jam/Guns/FakeProjectile.js";
 import { GatlingGun } from "../Jam/Guns/GatlingGun.js";
@@ -37,7 +38,6 @@ import { ProjectileGun } from "../Jam/Guns/ProjectileGun.js";
 import { SniperGun } from "../Jam/Guns/SniperGun.js";
 
 // Register types
-TypeStore.add("SpawnSpotHandlerFixed", SpawnSpotHandlerFixed);
 TypeStore.add("GalleryCharacter", GalleryCharacter);
 TypeStore.add("StandardCharacter", StandardCharacter);
 TypeStore.add("PlayerCamera", PlayerCamera);
@@ -63,6 +63,8 @@ TypeStore.add("NavMesh", NavMesh);
 TypeStore.add("Pig", Pig);
 TypeStore.add("PlayAudio", PlayAudio);
 TypeStore.add("ScaleUI", ScaleUI);
+TypeStore.add("SpawnSpotHandlerFixed", SpawnSpotHandlerFixed);
+TypeStore.add("UIManager", UIManager);
 TypeStore.add("WaveManager", WaveManager);
 TypeStore.add("FakeProjectile", FakeProjectile);
 TypeStore.add("GatlingGun", GatlingGun);

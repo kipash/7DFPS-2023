@@ -11,8 +11,11 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.Transform @stinkyAsset;
 		public UnityEngine.Transform @blinkyAsset;
 		public UnityEngine.Transform @enemyAsset;
-		public UnityEngine.GameObject @masterLabel;
+		public UnityEngine.UI.InputField @lobbyInputField;
 		public void awake(){}
+		public void joinInputFieldLobby(){}
+		public void joinRandomLobby(){}
+		public void leaveLobby(){}
 		public void start(){}
 		public void OnEnable(){}
 		public void OnDisable(){}

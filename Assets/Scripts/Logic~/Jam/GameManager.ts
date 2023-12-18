@@ -1,4 +1,4 @@
-import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, Mathf, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, serializable } from "@needle-tools/engine";
+import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, InputField, Mathf, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, randomNumber, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { Pig } from "./Pig";
 import { Enemy } from "./Enemy";
@@ -21,20 +21,45 @@ export class GameManager extends Behaviour {
     @serializable(EventList)
     onPlayerSpawned?: EventList;
 
-    @serializable(Object3D)
-    masterLabel?: Object3D;
+    /* @serializable(Object3D)
+    masterLabel?: Object3D; */
+
+    @serializable(InputField)
+    lobbyInputField?: InputField;
 
     private static _isMaster: boolean = false;
     public static get isMaster(): boolean { return this._isMaster; }
 
-    private static calculateIsMaster(): boolean {
+    public static CalculateIsMaster(): boolean {
         const net = Context.Current.connection;
-        return net.isInRoom && net.usersInRoom().indexOf(net.connectionId!) === 0;
+        this._isMaster = net.isInRoom && net.usersInRoom().indexOf(net.connectionId!) === 0;
+        return this._isMaster;
     }
 
     awake(): void {
         this.watchTabVisible();
-        this.context.connection.joinRoom(isDevEnvironment() ? "kippy_007" : "default");
+    }
+
+    joinInputFieldLobby() {
+        if (this.lobbyInputField) {
+            let id = `7DFPS_${this.lobbyInputField.text}`;
+            if(id.length > 0)
+                this.joinLobby(id);
+        }
+    }
+
+    joinRandomLobby() {
+        this.joinLobby(`7DFPS_${Math.floor(randomNumber(100, 999))}`);
+    }
+
+    leaveLobby() {
+        const net = this.context.connection;
+        if (net.isInRoom)
+            net.leaveRoom();
+    }
+
+    private joinLobby(id: string) {
+        this.context.connection.joinRoom(id);
     }
 
     start(): void {
@@ -44,19 +69,19 @@ export class GameManager extends Behaviour {
     onEnable(): void {
         this.context.connection.beginListen(RoomEvents.RoomStateSent, this.onJoinedRoom);
         this.context.connection.beginListen(RoomEvents.UserLeftRoom, this.onOtherUserLeft);
-        this.context.connection.beginListen("game-start", this.onGameStart);
+        this.context.connection.beginListen("game-start", this.handleGameStart);
     }
     onDisable(): void {
         this.context.connection.stopListen(RoomEvents.RoomStateSent, this.onJoinedRoom);
         this.context.connection.stopListen(RoomEvents.UserLeftRoom, this.onOtherUserLeft);
-        this.context.connection.stopListen("game-start", this.onGameStart);
+        this.context.connection.stopListen("game-start", this.handleGameStart);
     }
 
     private onJoinedRoom = (_model) => {
-        GameManager._isMaster = GameManager.calculateIsMaster();
+        GameManager._isMaster = GameManager.CalculateIsMaster();
 
-        if (this.masterLabel)
-            this.masterLabel.visible = GameManager._isMaster;
+        /* if (this.masterLabel)
+            this.masterLabel.visible = GameManager._isMaster; */
     }
 
     private onOtherUserLeft = (_model) => {
@@ -76,16 +101,20 @@ export class GameManager extends Behaviour {
         if (!GameManager._isMaster) return;
 
         this.context.connection.send("game-start");
-        this.onGameStart(null);
+        this.handleGameStart(null);
     }
 
     private _gameHasStarted: boolean = false;
     //@nonSerialized
     get gameHasStarted(): boolean { return this._gameHasStarted; }
 
-    private onGameStart = async (_model) => {
+    @serializable(EventList)
+    onGameStart: EventList = new EventList();
+
+    private handleGameStart = async (_model) => {
         this._gameHasStarted = true;
         this.startRespawnLoop();
+        this.onGameStart.invoke();
     }
 
     private async startRespawnLoop() {

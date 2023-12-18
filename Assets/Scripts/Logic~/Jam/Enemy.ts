@@ -75,7 +75,7 @@ export class Enemy extends Player {
 
     private pathfindInterval = -1;
     private *updatePathLoop() {
-        this.pathfindInterval = randomNumber(0.3, 0.5);//(1.8, 2.2);
+        this.pathfindInterval = randomNumber(1.8, 2.2);
         while (true) {
             this.updatePath();
             yield WaitForSeconds(this.pathfindInterval);
@@ -192,8 +192,12 @@ export class Enemy extends Player {
         if(targetPos === undefined) return;
 
         const dis = this.worldPosition.distanceTo(targetPos);
-        if(dis < this.arriveMargin) {
+        if(dis < this.arriveMargin /* && this.currentPath.length < this.currentPathIndex + 1 */) {
             this.currentPathIndex++;
+
+            /* // discard this update
+            this.move();
+            return; */
         }
 
         const dir = getTempVector(targetPos).sub(this.worldPosition);
