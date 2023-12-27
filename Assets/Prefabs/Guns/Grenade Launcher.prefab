@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1f1918672a80ec3c241b0d36eafcd90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraShakeOnFire: {x: 0.05, y: 0.05}
   origin: {fileID: 400039703088398880}
   projectile: {fileID: 54257993564845726, guid: 95b818aadf6a75c4c8872f4f50089976, type: 3}
   fireRate: 1

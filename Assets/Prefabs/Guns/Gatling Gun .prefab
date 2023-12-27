@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28cb3817312fc35fda4269b2b4bfe9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraShakeOnFire: {x: 0.01, y: 0.01}
   maxDistance: 150
   damage: 64
   shootSFX: {fileID: 3527997444533506201}
@@ -58,7 +59,6 @@ MonoBehaviour:
   maxSpinSpeed: 10
   spinAcceleration: 1
   muzzleFlash: {fileID: 192308273366096203}
-  emitMuzzleCount: 5
 --- !u!1 &5837465077261091235
 GameObject:
   m_ObjectHideFlags: 0

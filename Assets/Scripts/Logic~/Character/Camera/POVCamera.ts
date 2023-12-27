@@ -261,6 +261,11 @@ export class POVCamera extends PlayerCamera {
         if (y != undefined) this.y = y;
     }
 
+    addLook(dX: number, dY: number) {
+        this.x = MathUtils.clamp(this.x + dX, Mathf.toRadians(this.xRotClamp.x), Mathf.toRadians(this.xRotClamp.y));
+        this.y += dY;
+    }
+
     protected _person: ViewModeFlags | null = ViewModeFlags.FirstPerson;
     /** Current person mode that is active */
     get person(): ViewModeFlags | null { return this._person; }

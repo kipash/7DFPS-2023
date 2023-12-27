@@ -32,6 +32,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public void handleLineOfSight(){}
 		public void handleFOVBoost(){}
 		public void setLook(float @x, float @y){}
+		public void addLook(float @dX, float @dY){}
 		public void switchPerson(Needle.Engine.Components.Experimental.ViewModeFlags @mode){}
 		public void restoreDefault(){}
 	}

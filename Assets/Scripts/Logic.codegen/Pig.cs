@@ -9,6 +9,7 @@ namespace Needle.Typescript.GeneratedComponents
 	{
 		public Needle.Typescript.GeneratedComponents.PlayAudio @getHitSFX;
 		public void die(){}
+		public void awake(){}
 		public void update(){}
 	}
 }

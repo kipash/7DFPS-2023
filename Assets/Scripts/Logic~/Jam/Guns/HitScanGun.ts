@@ -136,5 +136,7 @@ export class HitScanGun extends Gun {
         }
 
         this.fireVisually(this.worldPosition, fwd, result.impactPos, result.impactNorm);
+        
+        super.fire();
     }
 }

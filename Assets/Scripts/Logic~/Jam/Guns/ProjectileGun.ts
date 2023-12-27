@@ -37,7 +37,7 @@ export class ProjectileGun extends Gun {
     private fireStamp = Number.MIN_SAFE_INTEGER;
     async fire() {
         if (!this.ourPlayer) return;
-
+        
         if (this.context.time.time - this.fireStamp < this.fireRate) return;
 
         this.fireStamp = this.context.time.time;
@@ -58,5 +58,7 @@ export class ProjectileGun extends Gun {
 
         // sfx
         this.shootSFX?.play();
+
+        super.fire();
     }
 }

@@ -1,10 +1,16 @@
-import { Behaviour, Context, EventList, Gizmos, ICollider, LogType, Vec2, Vec3, getWorldDirection, showBalloonMessage } from "@needle-tools/engine";
-import { Vector3, Ray, SkinnedMesh } from "three";
+import { Behaviour, Context, EventList, Gizmos, ICollider, LogType, Vec2, Vec3, getWorldDirection, serializable, showBalloonMessage } from "@needle-tools/engine";
+import { Vector3, Ray, SkinnedMesh, Vector2 } from "three";
 import { Player } from "../../Character/Framework/Player";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { radToDeg } from "three/src/math/MathUtils";
 
 export class Gun extends Behaviour {
+
+    @serializable(Vector2)
+    cameraShakeOnFire: Vector2 = new Vector2(0.1, 0.1);
+    // @nonSerialized
+    onFire: EventList = new EventList();
+
     protected ourPlayer?: Player;
     awake() {
         this.ourPlayer = this.gameObject.getComponentInParent(Player)!;
@@ -37,5 +43,9 @@ export class Gun extends Behaviour {
             return { point: vec, normal: nor, collider: engine.getComponent(hit.collider) as ICollider };
         }
         return null;
+    }
+
+    fire() {
+        this.onFire.invoke(this.cameraShakeOnFire);
     }
 }
