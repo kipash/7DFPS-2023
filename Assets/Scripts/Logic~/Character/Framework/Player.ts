@@ -1,6 +1,7 @@
 import { Behaviour, CapsuleCollider, ConstructorConcrete, EventList, GameObject, Mathf, PlayerState, getComponent, serializable, showBalloonMessage, syncField } from "@needle-tools/engine";
 import { PlayerModule, PlayerModuleRole } from "./PlayerModule.js";
 import { CharacterState } from "./PlayerState.js";
+import { HealthBarUI } from "../../Jam/HealthBarUI.js";
 
 /** Base definition of an Player which has modules that define its capabilities. 
  *  These modules communciate via a state object that holds values */
@@ -53,10 +54,7 @@ export abstract class Player extends Behaviour {
 
         this.roleChanged(this.isLocalPlayer);
 
-        if(this.isLocalPlayer) {
-            this._hp = this.maxHealth;
-            this._isDead = false;
-        }
+        this.resetHealth();
     }
 
     protected roleChanged(isLocalPlayer: boolean) {
@@ -98,36 +96,42 @@ export abstract class Player extends Behaviour {
         this._frameState = {};
         this.onRoleChanged = new EventList();
         this.playerState = this.gameObject.getComponent(PlayerState)!;
+
+        this.healthBar?.set(0, 1, false, true);
     }
 
     start() {
         this.startInitialization(true);
     }
 
-    private allegableForUpdate(module: PlayerModule): boolean {
-        return module.isInitialized && 0 != (module.allowedRoles & (this.isLocalPlayer ? PlayerModuleRole.local : PlayerModuleRole.remote));
+    static allegableForUpdate(player: Player, module: PlayerModule): boolean {
+        return module.isInitialized && 0 != (module.allowedRoles & (player.isLocalPlayer ? PlayerModuleRole.local : PlayerModuleRole.remote));
     }
 
     earlyUpdate(): void {
         // clear frame state
         this._frameState = {};
 
-        this._modules.forEach(module => { if (this.allegableForUpdate(module)) { module.moduleEarlyUpdate(); } });
+        this._modules.forEach(module => { if (Player.allegableForUpdate(this, module)) { module.moduleEarlyUpdate(); } });
     }
     update(): void {
-        this._modules.forEach(module => { if (this.allegableForUpdate(module)) { module.moduleUpdate(); } });
+        this._modules.forEach(module => { if (Player.allegableForUpdate(this, module)) { module.moduleUpdate(); } });
+        this.healthBar?.set(this.hp, this.maxHealth, true);
     }
     lateUpdate(): void {
-        this._modules.forEach(module => { if (this.allegableForUpdate(module)) { module.moduleLateUpdate(); } });
+        this._modules.forEach(module => { if (Player.allegableForUpdate(this, module)) { module.moduleLateUpdate(); } });
     }
     onBeforeRender(): void {
-        this._modules.forEach(module => { if (this.allegableForUpdate(module)) { module.moduleOnBeforeRender(); } });
+        this._modules.forEach(module => { if (Player.allegableForUpdate(this, module)) { module.moduleOnBeforeRender(); } });
     }
 
     // ------------ JAM -------------
 
     @serializable()
     maxHealth: number = 100;
+
+    @serializable(HealthBarUI)
+    healthBar?: HealthBarUI;
 
     onDie: EventList = new EventList();
 
@@ -138,7 +142,12 @@ export abstract class Player extends Behaviour {
     protected _isDead: boolean = false;
     get isDead(): boolean { return this._isDead; }
 
-    
+    resetHealth() {
+        if(this.isLocalPlayer) {
+            this._hp = this.maxHealth;
+            this._isDead = false;
+        }
+    }
 
     dealDamage(dmg: number) {
         this._hp = Mathf.clamp(this.hp - dmg, 0, 99999999);

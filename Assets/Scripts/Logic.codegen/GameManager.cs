@@ -12,6 +12,8 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.Transform @blinkyAsset;
 		public UnityEngine.Transform @enemyAsset;
 		public UnityEngine.UI.InputField @lobbyInputField;
+		public Needle.Typescript.GeneratedComponents.HousePlayer @housePlayer;
+		public UnityEngine.Camera @defaultCamera;
 		public void awake(){}
 		public void joinInputFieldLobby(){}
 		public void joinRandomLobby(){}
@@ -19,11 +21,11 @@ namespace Needle.Typescript.GeneratedComponents
 		public void start(){}
 		public void OnEnable(){}
 		public void OnDisable(){}
+		public void resetGame(){}
 		public void startGame(){}
 		public void selectCharacter(float @index){}
 		public void spawnPlayer(){}
 		public void update(){}
-		public void spawnEnemy(){}
 		public void spawnAsset(UnityEngine.Transform @asset){}
 	}
 }

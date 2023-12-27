@@ -1,5 +1,5 @@
-import { Behaviour, Collider, Collision, GameObject, Mathf, Rigidbody, SyncedTransform, findObjectsOfType, getTempVector, randomNumber, serializable } from "@needle-tools/engine";
-import { Quaternion } from "three";
+import { AssetReference, Behaviour, Collider, Collision, GameObject, Mathf, Rigidbody, SyncedTransform, findObjectsOfType, getTempVector, randomNumber, serializable } from "@needle-tools/engine";
+import { Quaternion, Vector3 } from "three";
 import { Player } from "../../Character/Framework/Player";
 
 
@@ -12,6 +12,9 @@ export class Projectile extends Behaviour {
 
     @serializable()
     explodeAfter: number = 1;
+
+    @serializable(AssetReference)
+    explosionEffect?: AssetReference;
 
     private rigidBody?: Rigidbody;
     private isLocalPlayer = false;
@@ -75,7 +78,7 @@ export class Projectile extends Behaviour {
         }
     }
 
-    explode() {
+    async explode() {
         clearTimeout(this.explodeTimeoutId);
         this.explodeTimeoutId = -1;
 
@@ -94,6 +97,8 @@ export class Projectile extends Behaviour {
             }
         });
 
+        await this.explosionEffect?.instantiateSynced({ parent: this.context.scene.children[0], position: this.gameObject.getWorldPosition(new Vector3()) });
+        
         GameObject.destroySynced(this.gameObject, this.context);
     }
 }

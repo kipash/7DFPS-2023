@@ -2,6 +2,7 @@ import { Behaviour, GameObject, RoomEvents, Text, serializable } from "@needle-t
 import { GameManager } from "./GameManager";
 import { Object3D } from "three";
 import { Player } from "../Character/Framework/Player";
+import { HealthBarUI } from "./HealthBarUI";
 
 export class UIManager extends Behaviour {
     @serializable(GameManager)
@@ -33,6 +34,9 @@ export class UIManager extends Behaviour {
 
     @serializable(Text)
     lobbyUsersLabel!: Text;
+
+    @serializable(HealthBarUI)
+    playerHealthBar?: HealthBarUI;
 
     awake(): void {
         const net = this.context.connection;
@@ -72,5 +76,15 @@ export class UIManager extends Behaviour {
                 pl.onDie.addEventListener(() => this.cross.visible = false);
             }
         });
+
+        // force setup
+        this.playerHealthBar?.set(0, 1, false, true);
+    }
+
+    update(): void {
+        const hp = this.gameManager.localPlayer?.hp ?? 0;
+        const maxhp = this.gameManager.localPlayer?.maxHealth ?? 0;
+        const isAlive = this.gameManager.localPlayer?.isDead == false ?? false;
+        this.playerHealthBar?.set(hp, maxhp, isAlive);
     }
 }

@@ -82,13 +82,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 100
+  healthBar: {fileID: 0}
   movementSpeed: 28
   jumpSpeed: 8
   cameraXOffset: 1
   cameraYOffset: 1.6
   enableSprint: 0
   lineOfSightRef: {fileID: 1343171976102342666}
-  attackDistance: 1
+  attackDistancePig: 1
+  attackDistanceHouse: 4
   attackRate: 1
   attackDamage: 10
   animator: {fileID: 623058231693087024}

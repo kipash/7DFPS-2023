@@ -36,12 +36,6 @@ export class WaveManager extends Behaviour {
     @serializable(PlayAudio)
     gameOver?: PlayAudio;
 
-    //@nonSerialized
-    get anyEnemies(): boolean { return this.currentEnemies.some(x => x != null && x != undefined && !x.isDead); }
-    //@nonSerialized
-    get enemyCount(): number { return this.currentEnemies.length; }
-    private currentEnemies: Enemy[] = [];
-
     awake(): void {
         this.gameManager.onPlayerSpawned?.addEventListener(() => {
             if(GameManager.isMaster)
@@ -62,7 +56,6 @@ export class WaveManager extends Behaviour {
 
         for (let i = 0; i < unitsToSpawn; i++) {
             const enemy = await this.gameManager.spawnEnemy() as Enemy;
-            this.currentEnemies.push(enemy!);
 
             //enemy.gameObject.visible = false;
             
@@ -75,7 +68,7 @@ export class WaveManager extends Behaviour {
             await delay(1000 * this.unitInterval);
         }
 
-        while (this.currentEnemies.some(x => (x != null || x != undefined) && !x.isDead)) {
+        while (this.gameManager.enemiesAlive > 0) {
             await delay(250);
         }
         
@@ -86,23 +79,5 @@ export class WaveManager extends Behaviour {
         this.isSpawningAWave = false;
 
         this.spawnWave();
-    }
-
-    private unitsAlive: number = 0;
-    update() {
-        if(!this.gameManager.gameHasStarted || !GameManager.isMaster) return;
-
-        this.unitsAlive = this.currentEnemies.filter(x => x && !x.isDead).length;
-
-        // Auto kill clipped units
-        this.currentEnemies.forEach(x => { 
-            if(x && x.worldPosition.y < -50) {
-                x.die();
-            }
-        });
-        
-        /* if(this.waveLabel) {
-            this.waveLabel.text = `${this.unitsAlive} / ${this.unitCount}`;
-        } */
     }
 }

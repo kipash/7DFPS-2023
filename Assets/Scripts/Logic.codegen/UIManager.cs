@@ -17,7 +17,9 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.GameObject @awaitingHostLabel;
 		public UnityEngine.UI.Text @lobbyIdLabel;
 		public UnityEngine.UI.Text @lobbyUsersLabel;
+		public Needle.Typescript.GeneratedComponents.HealthBarUI @playerHealthBar;
 		public void awake(){}
+		public void update(){}
 	}
 }
 

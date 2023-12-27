@@ -1,8 +1,12 @@
-import { AssetReference, Behaviour, Context, EventList, GameObject, IGameObject, InputField, Mathf, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, randomNumber, serializable } from "@needle-tools/engine";
+import { AssetReference, Behaviour, Camera, Context, EventList, GameObject, IGameObject, InputField, Mathf, PlayerState, RoomEvents, SendQueue, UserJoinedOrLeftRoomModel, isDevEnvironment, randomNumber, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { Pig } from "./Pig";
 import { Enemy } from "./Enemy";
 import { Object3D, Vector3 } from "three";
+import { HousePlayer } from "./HousePlayer";
+import { PointerLock } from "../Character/Input/PointerLock";
+import { POVCamera } from "../Character/Camera/POVCamera";
+import { DesktopCharacterInput } from "../Character/Input/DesktopCharacterInput";
 
 export class GameManager extends Behaviour {
     @serializable(AssetReference)
@@ -27,6 +31,12 @@ export class GameManager extends Behaviour {
     @serializable(InputField)
     lobbyInputField?: InputField;
 
+    @serializable(HousePlayer)
+    housePlayer?: HousePlayer;
+
+    @serializable(Camera)
+    defaultCamera?: Camera;
+
     private static _isMaster: boolean = false;
     public static get isMaster(): boolean { return this._isMaster; }
 
@@ -36,8 +46,17 @@ export class GameManager extends Behaviour {
         return this._isMaster;
     }
 
+    private gameOver = false;
+
     awake(): void {
         this.watchTabVisible();
+
+        if (this.housePlayer) {
+            this.housePlayer.onDie.addEventListener(house => {
+                this.gameOver = true;
+                this.resetGame();
+            });
+        }
     }
 
     joinInputFieldLobby() {
@@ -77,6 +96,24 @@ export class GameManager extends Behaviour {
         this.context.connection.stopListen("game-start", this.handleGameStart);
     }
 
+    resetGame() {
+        if (!GameManager.isMaster) return;
+
+        const clonedEnemyArray = Object.assign([] as Enemy[], this.enemies);
+        clonedEnemyArray.forEach(x => x.die()); //kill everyone
+
+        this.localPlayer?.die();
+
+        if (this.defaultCamera) this.context.setCurrentCamera(this.defaultCamera);
+
+        this.housePlayer?.resetHealth();
+
+        const net = this.context.connection;
+        if(net.isInRoom) net.leaveRoom();
+
+        this._gameHasStarted = false;
+    }
+
     private onJoinedRoom = (_model) => {
         GameManager._isMaster = GameManager.CalculateIsMaster();
 
@@ -100,6 +137,8 @@ export class GameManager extends Behaviour {
         if (this._gameHasStarted) return;
         if (!GameManager._isMaster) return;
 
+        this.gameOver = false;
+
         this.context.connection.send("game-start");
         this.handleGameStart(null);
     }
@@ -119,7 +158,10 @@ export class GameManager extends Behaviour {
 
     private async startRespawnLoop() {
         const player = await this.spawnPlayer();
-        player?.onDie.addEventListener(() => this.startRespawnLoop());
+        player?.onDie.addEventListener(() => { 
+            if (!this.gameOver)
+                this.startRespawnLoop();
+        });
     }
 
     private charSelect: number = 0;
@@ -127,7 +169,8 @@ export class GameManager extends Behaviour {
         this.charSelect = index;
     }
 
-    private players: Player[] = [];
+    private _localPlayer?: Player;
+    get localPlayer(): Player | undefined { return this._localPlayer; }
     async spawnPlayer(): Promise<Player | null> {
         if (!this.plinkyAsset) return null;
 
@@ -135,29 +178,50 @@ export class GameManager extends Behaviour {
         const playerObj = await this.spawnAsset(asset);
 
         const player = playerObj.getComponent(Pig)!;
-        this.players.push(player);
-        player.onDie.addEventListener(() => {
-            this.players.splice(this.players.indexOf(player), 1);
-        });
+        this._localPlayer = player;
         this.onPlayerSpawned?.invoke(playerObj);
 
         return player;
     }
 
+    //auto kill units when below world
     update(): void {
-        this.players.forEach(x => {
-            if(!x.isDead && x.worldPosition.y < -20) {
+        if (!GameManager.isMaster) return;
+
+        if(this._localPlayer && !this._localPlayer.isDead && this._localPlayer.worldPosition.y < -20) {
+            this._localPlayer.dealDamage(9999);
+        }
+
+        if(this.housePlayer && !this.housePlayer.isDead && this.housePlayer.worldPosition.y < -20) {
+            this.housePlayer.dealDamage(9999);
+        }
+
+        this.enemies.forEach(x => {
+            if (x && !x.isDead && x.worldPosition.y < -20) {
                 x.dealDamage(9999);
             }
         });
     }
 
+    private enemies: Enemy[] = [];
+
+    // @nonSerialized
+    get enemiesAlive(): number { return this.enemies.filter(x => x && !x.isDead).length; }
     async spawnEnemy(): Promise<Enemy | null> {
         if (!this.enemyAsset) return null;
 
         const enemyObj = await this.spawnAsset(this.enemyAsset);
-
+        
         const enemy = enemyObj.getComponent(Enemy)!;
+        if (enemy) {
+            this.enemies.push(enemy);
+            enemy.onDie.addEventListener(() => {
+                const index = this.enemies.indexOf(enemy);
+                if (index >= 0) {
+                    this.enemies.splice(index, 1);
+                }
+            });
+        }
         return enemy;
     }
 

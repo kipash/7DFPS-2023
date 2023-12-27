@@ -10,6 +10,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public float @damage = 100f;
 		public float @blastRadius = 1f;
 		public float @explodeAfter = 1f;
+		public UnityEngine.Transform @explosionEffect;
 		public void awake(){}
 		public void start(){}
 		public void initialize(bool @isLocalPlayer){}

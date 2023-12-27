@@ -55,6 +55,9 @@ export class DesktopCharacterInput extends PlayerModule {
     }
 
     onDestroy(): void {
+        if (Player.allegableForUpdate(this.player, this))
+            this.pointerLock?.unlock();
+        
         this.pointerLock?.dispose();
     }
 

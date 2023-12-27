@@ -13,7 +13,8 @@ namespace Needle.Typescript.GeneratedComponents
 		public float @cameraYOffset = 1.6f;
 		public bool @enableSprint = true;
 		public UnityEngine.GameObject @lineOfSightRef;
-		public float @attackDistance = 1f;
+		public float @attackDistancePig = 1f;
+		public float @attackDistanceHouse = 3f;
 		public float @attackRate = 1f;
 		public float @attackDamage = 10f;
 		public UnityEngine.Animator @animator;

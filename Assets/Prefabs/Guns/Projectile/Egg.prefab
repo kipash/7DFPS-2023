@@ -101,6 +101,7 @@ MonoBehaviour:
   damage: 150
   blastRadius: 3
   explodeAfter: 1
+  explosionEffect: {fileID: 7556358933934136421, guid: 39c37de7b6172be42a341a19f6715987, type: 3}
 --- !u!114 &2036856279164767206
 MonoBehaviour:
   m_ObjectHideFlags: 0

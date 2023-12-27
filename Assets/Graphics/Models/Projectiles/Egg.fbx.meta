@@ -3,7 +3,12 @@ guid: 85ebf2d8bd3614549bb1b5bbda1cc883
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Eggshell_mtl
+    second: {fileID: 2100000, guid: 673da7e4950cb764dac52513ece0e442, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

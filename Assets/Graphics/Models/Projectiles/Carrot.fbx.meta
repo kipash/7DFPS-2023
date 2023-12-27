@@ -3,7 +3,22 @@ guid: 41fc3a317df92484da3d05762b23d5e7
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Carrot_shadow_mtl
+    second: {fileID: 2100000, guid: 102a418467df8f140bbb7bd79362876f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Light_green_mtl
+    second: {fileID: 2100000, guid: 8bc7e5496d3b722458ccd181df3eb340, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: carrot_mtl
+    second: {fileID: 2100000, guid: 4391bc391169a0e479556a282bc930db, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -31,7 +31,10 @@ export class Enemy extends Player {
     lineOfSightRef?: Object3D;
 
     @serializable()
-    attackDistance: number = 1;
+    attackDistancePig: number = 1;
+
+    @serializable()
+    attackDistanceHouse: number = 3;
 
     @serializable()
     attackRate: number = 1;
@@ -120,19 +123,21 @@ export class Enemy extends Player {
         if (!this.isLocalPlayer) return;
 
         this.move();
-
         this.attack();
     }
 
     private lastAttackTime: number = Number.MIN_SAFE_INTEGER;
     attack() {
-        if(!this.target || this.target.isDead || this.isDead) return;
+        if (!this.target || this.target.isDead || this.isDead) return;
 
         const distance = this.worldPosition.distanceTo(this.target.worldPosition);
-        if(distance > this.attackDistance) return;
+
+        // switch distnace based on target type
+        const minAttackDistnace = this.target instanceof HousePlayer ? this.attackDistanceHouse : this.attackDistancePig;
+        if (distance > minAttackDistnace) return;
 
         const time = this.context.time.time;
-        if(time - this.lastAttackTime < this.attackRate) return;
+        if (time - this.lastAttackTime < this.attackRate) return;
 
         this.lastAttackTime = time;
         this.target.dealDamage(this.attackDamage);
@@ -166,7 +171,7 @@ export class Enemy extends Player {
         /* this.currentPath.length = 0;
         this.currentPath = [this.target.gameObject.getWorldPosition(getTempVector()).clone()];
         this.currentPathIndex = 0; */
-        
+
         // don't pathfind when not grounded
         const physics = this.state as CharacterPhysics_Scheme;
         if (!physics.characterIsGrounded) return;
@@ -176,11 +181,11 @@ export class Enemy extends Player {
         if (path && path.length != 0) { // debug
             this.currentPath = path;
             this.currentPathIndex = 0;
-            for (let i = 0; i < path.length - 1; i++) {
+            /* for (let i = 0; i < path.length - 1; i++) {
                 const v1 = path[i];
                 const v2 = path[i + 1];
                 Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
-            }
+            } */
         }
         else {
             this.currentPathIndex = -1; // no path or update path
@@ -191,12 +196,12 @@ export class Enemy extends Player {
     /* private posLastFrame: Vector3 | null = null; */
     private refFwd = new Vector3(0, 0, 1);
     move() {
-        if(!this.currentPath) return;
+        if (!this.currentPath) return;
         const targetPos = this.currentPath[this.currentPathIndex];
-        if(targetPos === undefined) return
+        if (targetPos === undefined) return
 
         const distance = this.worldPosition.distanceTo(targetPos);
-        if(distance < this.arriveMargin) {
+        if (distance < this.arriveMargin) {
             this.currentPathIndex++;
 
             this.move();
@@ -204,25 +209,25 @@ export class Enemy extends Player {
         }
 
         const dir = getTempVector(targetPos).sub(this.gameObject.worldPosition);
-        if(dir.length() < this.arriveMargin) {
+        if (dir.length() < this.arriveMargin) {
             this.currentPathIndex++;
             this.move();
             return;
-        }             
-        
+        }
+
         dir.y = 0;
         dir.normalize();
 
         /* Gizmos.DrawLabel(new Vector3(0, 2, 0), `${this.currentPathIndex + 1}/${this.currentPath.length}`, 0.1, 0, 0xffffff, 0x000000, this.gameObject); */
-        Gizmos.DrawLine(this.gameObject.worldPosition, targetPos, 0x00ff00, 0, false);
-        
+        /* Gizmos.DrawLine(this.gameObject.worldPosition, targetPos, 0x00ff00, 0, false); */
+
         // don't move while attacking
         if (this.context.time.time - this.lastAttackTime < this.attackRate) return;
 
         const input = this.frameState as CommonCharacterInput_Scheme;
         input.moveDeltaX = -dir.x;
         input.moveDeltaY = dir.z;
-        
+
         const physics = this.state as CharacterPhysics_Scheme;
         physics.characterDirection = this.refFwd;
     }
@@ -233,7 +238,7 @@ export class Enemy extends Player {
         super.die();
 
         if (this.isLocalPlayer) {
-            if(this.puffEffect)
+            if (this.puffEffect)
                 await this.puffEffect.instantiateSynced({ parent: this.context.scene.children[0], position: this.gameObject.getWorldPosition(new Vector3()) });
 
             GameObject.destroySynced(this.gameObject);

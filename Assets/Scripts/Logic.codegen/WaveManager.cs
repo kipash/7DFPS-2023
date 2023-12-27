@@ -18,7 +18,6 @@ namespace Needle.Typescript.GeneratedComponents
 		public Needle.Typescript.GeneratedComponents.PlayAudio @gameOver;
 		public void awake(){}
 		public void spawnWave(){}
-		public void update(){}
 	}
 }
 
