@@ -92,6 +92,7 @@ MonoBehaviour:
   attackRate: 1
   attackDamage: 10
   animator: {fileID: 623058231693087024}
+  puffEffect: {fileID: 2397666747945356661, guid: 51d2576c58892b24db4a568298e52aa9, type: 3}
 --- !u!143 &1028328968054885533
 CharacterController:
   m_ObjectHideFlags: 0
@@ -295,7 +296,7 @@ MonoBehaviour:
   sprintName: 
   speedMultiplier: speedMultiplier
   minWalkSpeed: 1
-  baseWalkSpeed: 0.5
+  baseWalkSpeed: 1
   minSprintSpeed: 6
   baseSprintSpeed: 1
   adjustWithScale: 1

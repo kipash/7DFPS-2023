@@ -17,6 +17,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public float @attackRate = 1f;
 		public float @attackDamage = 10f;
 		public UnityEngine.Animator @animator;
+		public UnityEngine.Transform @puffEffect;
 		public void initialize(bool @findModules){}
 		public void earlyUpdate(){}
 		public void attack(){}

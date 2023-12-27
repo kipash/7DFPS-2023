@@ -36,6 +36,10 @@ export class WaveManager extends Behaviour {
     @serializable(PlayAudio)
     gameOver?: PlayAudio;
 
+    //@nonSerialized
+    get anyEnemies(): boolean { return this.currentEnemies.some(x => x != null && x != undefined && !x.isDead); }
+    //@nonSerialized
+    get enemyCount(): number { return this.currentEnemies.length; }
     private currentEnemies: Enemy[] = [];
 
     awake(): void {

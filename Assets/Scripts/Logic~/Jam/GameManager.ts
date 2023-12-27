@@ -132,7 +132,6 @@ export class GameManager extends Behaviour {
         if (!this.plinkyAsset) return null;
 
         const asset = [this.plinkyAsset, this.stinkyAsset, this.blinkyAsset][Mathf.clamp(this.charSelect, 0, 2)]!;
-        console.log(asset.uri);
         const playerObj = await this.spawnAsset(asset);
 
         const player = playerObj.getComponent(Pig)!;

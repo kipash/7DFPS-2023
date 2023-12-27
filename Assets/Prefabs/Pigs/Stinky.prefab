@@ -672,8 +672,6 @@ GameObject:
   - component: {fileID: 8098115391464587810}
   - component: {fileID: 651258271725523218}
   - component: {fileID: 309005451928436898}
-  - component: {fileID: 4104331175438383324}
-  - component: {fileID: 250353849384415119}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -748,34 +746,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5920553866250963072}
   m_Enabled: 1
---- !u!114 &4104331175438383324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5920553866250963072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a036248111e742749a39ce7bcbd68c7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fastMode: 1
---- !u!114 &250353849384415119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5920553866250963072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 141c4525abe049cc8376792dfeed6718, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Length: 0.25
-  DepthTest: 1
-  IsGizmo: 0
 --- !u!1 &8535881727600915296
 GameObject:
   m_ObjectHideFlags: 0

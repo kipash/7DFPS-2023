@@ -1,4 +1,4 @@
-import { Behaviour, GameObject, Mathf } from "@needle-tools/engine";
+import { Behaviour, GameObject, Mathf, getTempVector } from "@needle-tools/engine";
 import { Vector3 } from "three";
 
 export class FakeProjectile extends Behaviour {
@@ -22,6 +22,7 @@ export class FakeProjectile extends Behaviour {
         const time = this.context.time.time;
         const t = Mathf.clamp01((time - this.startTime) / this.duration);
         this.gameObject.position.copy(this.startPos).lerp(this.endPos, t);
+        this.gameObject.lookAt(this.endPos);
         if(t >= 1) {
             GameObject.destroy(this.gameObject);
         }

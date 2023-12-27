@@ -19,7 +19,7 @@ export class NavMesh extends Behaviour {
 
         // invalid a, b
         if (!path) {
-            let addFrom = false;
+            let fromEdited = false;
             if (!NavMesh.isPointOnNavMesh(a)) {
                 //addFrom = true;
                 const fixedA = NavMesh.getClosestVertex(from)!;
@@ -31,7 +31,7 @@ export class NavMesh extends Behaviour {
                     console.log("No A"); */
             }
 
-            let addTo = false;
+            let toEdited = false;
             if (!NavMesh.isPointOnNavMesh(b)) {
                 //addTo = true;
                 const fixedB = NavMesh.getClosestVertex(to) ?? to;
@@ -46,10 +46,15 @@ export class NavMesh extends Behaviour {
             path = NavMesh.findPath(a, b);
 
             if (path) {
-                if (addFrom)
+                if (fromEdited) {
+                    path = path.slice(1, path.length - 1);
                     path.unshift(from);
-                if (addTo)
+                }
+                
+                if (toEdited) {
+                    path = path.slice(0, path.length - 2);
                     path.push(to);
+                }
             }
         }
 

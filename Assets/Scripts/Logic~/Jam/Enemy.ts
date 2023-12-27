@@ -1,4 +1,4 @@
-import { Animator, GameObject, Gizmos, IComponent, Mathf, SyncedTransform, WaitForSeconds, findObjectsOfType, getTempVector, lookAtInverse, randomNumber, serializable } from "@needle-tools/engine";
+import { Animator, AssetReference, GameObject, Gizmos, IComponent, Mathf, SyncedTransform, WaitForSeconds, findObjectsOfType, getTempVector, lookAtInverse, randomNumber, serializable } from "@needle-tools/engine";
 import { Player } from "../Character/Framework/Player";
 import { CharacterPhysics, CharacterPhysics_MovementMode, CharacterPhysics_Scheme } from "../Character/Physics/CharacterPhysics";
 import { CommonAvatar } from "../Character/Misc/CommonAvatar";
@@ -42,6 +42,8 @@ export class Enemy extends Player {
     @serializable(Animator)
     animator?: Animator;
 
+    @serializable(AssetReference)
+    puffEffect?: AssetReference;
 
     protected physics!: CharacterPhysics;
 
@@ -71,7 +73,7 @@ export class Enemy extends Player {
 
     private pathfindInterval = -1;
     private *updatePathLoop() {
-        this.pathfindInterval = randomNumber(.4, .6);//1.8, 2.2);
+        this.pathfindInterval = randomNumber(1.8, 2.2);
         while (true) {
             this.updatePath();
             yield WaitForSeconds(this.pathfindInterval);
@@ -174,18 +176,18 @@ export class Enemy extends Player {
         if (path && path.length != 0) { // debug
             this.currentPath = path;
             this.currentPathIndex = 0;
-            //for (let i = 0; i < path.length - 1; i++) {
-            //    const v1 = path[i];
-            //    const v2 = path[i + 1];
-            //    Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
-            //}
+            for (let i = 0; i < path.length - 1; i++) {
+                const v1 = path[i];
+                const v2 = path[i + 1];
+                Gizmos.DrawLine(v1, v2, 0xff0000, this.pathfindInterval, false);
+            }
         }
         else {
             this.currentPathIndex = -1; // no path or update path
         }
     }
 
-    private arriveMargin: number = 0.4;
+    private arriveMargin: number = 0.1;
     /* private posLastFrame: Vector3 | null = null; */
     private refFwd = new Vector3(0, 0, 1);
     move() {
@@ -202,12 +204,17 @@ export class Enemy extends Player {
         }
 
         const dir = getTempVector(targetPos).sub(this.gameObject.worldPosition);
+        if(dir.length() < this.arriveMargin) {
+            this.currentPathIndex++;
+            this.move();
+            return;
+        }             
         
         dir.y = 0;
         dir.normalize();
 
         /* Gizmos.DrawLabel(new Vector3(0, 2, 0), `${this.currentPathIndex + 1}/${this.currentPath.length}`, 0.1, 0, 0xffffff, 0x000000, this.gameObject); */
-        /* Gizmos.DrawDirection(this.worldPosition, dir, 0x00ff00, 0, false, 1); */
+        Gizmos.DrawLine(this.gameObject.worldPosition, targetPos, 0x00ff00, 0, false);
         
         // don't move while attacking
         if (this.context.time.time - this.lastAttackTime < this.attackRate) return;
@@ -220,12 +227,15 @@ export class Enemy extends Player {
         physics.characterDirection = this.refFwd;
     }
 
-    die(): void {
+    async die() {
         if (this._isDead) return;
 
         super.die();
 
         if (this.isLocalPlayer) {
+            if(this.puffEffect)
+                await this.puffEffect.instantiateSynced({ parent: this.context.scene.children[0], position: this.gameObject.getWorldPosition(new Vector3()) });
+
             GameObject.destroySynced(this.gameObject);
         }
     }
