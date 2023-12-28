@@ -11,7 +11,7 @@ namespace Needle.Typescript.GeneratedComponents
 		public UnityEngine.AudioSource @combatMusic;
 		public float @fadeSpeed = 1f;
 		public float @volume = 1f;
-		public Needle.Typescript.GeneratedComponents.WaveManager @waveManager;
+		public Needle.Typescript.GeneratedComponents.GameManager @gameManager;
 		public void awake(){}
 		public void update(){}
 	}

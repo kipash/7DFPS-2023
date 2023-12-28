@@ -1,5 +1,6 @@
 import { AudioSource, Behaviour, Mathf, serializable } from "@needle-tools/engine";
 import { WaveManager } from "./WaveManager";
+import { GameManager } from "./GameManager";
 
 export class AudioManager extends Behaviour {
     @serializable(AudioSource)
@@ -14,8 +15,8 @@ export class AudioManager extends Behaviour {
     @serializable()
     volume: number = 1;
 
-    @serializable(WaveManager)
-    waveManager?: WaveManager;
+    @serializable(GameManager)
+    gameManager?: GameManager;
 
     private iVolumeOnStart = -1;
     private cVolumeOnStart = -1;
@@ -35,8 +36,8 @@ export class AudioManager extends Behaviour {
     private iT = 1;
     private cT = 0;
     update(): void {
-        if(this.waveManager) {
-            const e = this.waveManager.anyEnemies;
+        if(this.gameManager) {
+            const e = this.gameManager.enemiesAlive > 0;
             this.iT = e ? 0 : 1;
             this.cT = e ? 1 : 0;
         }
