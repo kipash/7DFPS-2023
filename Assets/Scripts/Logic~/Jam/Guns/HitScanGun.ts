@@ -128,6 +128,7 @@ export class HitScanGun extends Gun {
         fwd.applyQuaternion(q2.multiply(q1));
 
         const result = this.firePhysicially(origin, fwd);
+        this.fireVisually(this.worldPosition, fwd, result.impactPos, result.impactNorm);
 
         const player = result.object?.getComponentInParent(Player);
         if (player) {
@@ -135,8 +136,6 @@ export class HitScanGun extends Gun {
             player.dealDamage(this.damage);
         }
 
-        this.fireVisually(this.worldPosition, fwd, result.impactPos, result.impactNorm);
-        
         super.fire();
     }
 }
