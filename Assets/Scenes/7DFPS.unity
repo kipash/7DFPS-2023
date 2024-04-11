@@ -1718,7 +1718,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &157715622
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8402,7 +8402,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &626605055
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10771,7 +10771,7 @@ Transform:
   - {fileID: 721694322}
   - {fileID: 1634598067}
   m_Father: {fileID: 1082755380}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &780637864
 GameObject:
@@ -11363,6 +11363,7 @@ MonoBehaviour:
   joinRandomRoom: 0
   requireRoomParameter: 0
   autoRejoin: 0
+  createJoinButton: 0
 --- !u!1001 &828574972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14235,9 +14236,9 @@ Transform:
   - {fileID: 1351312615}
   - {fileID: 952416263}
   - {fileID: 1205956472}
+  - {fileID: 778653581}
   - {fileID: 1937474697}
   - {fileID: 1339958193}
-  - {fileID: 778653581}
   - {fileID: 770301790}
   - {fileID: 31243427}
   m_Father: {fileID: 0}
@@ -24539,7 +24540,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1937051992
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26733,7 +26734,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2093144124
 RectTransform:
   m_ObjectHideFlags: 0
